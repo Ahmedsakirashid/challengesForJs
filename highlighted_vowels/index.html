@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: rgba(0, 1, 5, 0.541);
+    }
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        background-color: #abcdf4;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    header{
+        padding: 1.1rem;
+        background-color: antiquewhite;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    header p{
+        opacity: 0.5;
+    }
+
+    .body-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .body-container input{
+        padding: 10px;
+        font-size: 1rem;
+        height: 30px;
+        width: 40rem;
+        border-radius: 5px;
+        border: none;
+    }
+
+    .output{
+        font-size: 18px;
+        line-height: 1.6;
+        word-wrap: break-word;
+        background-color: white;
+    }
+
+    .vowels{
+        background-color: #ffeb3b;
+        padding: 2px 1px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>Highlighted Vowels</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores, excepturi quasi? Excepturi!</p>
+        </header>
+
+        <div class="body-container">
+            <div class="input-container">
+                <input type="text" id="input">
+            </div>
+
+            <div class="output" id="output"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            const inputELement = document.getElementById("input");
+            const outputElement = document.getElementById("output");
+
+            //VARIABLE II KAYDINAYA VOWELS-KII 
+            const vowels = 'aeiouAEIOU';
+            
+            // WAA INPUT-KII WAX AAN KU DHEX QORAYEY 
+            // inputELement.addEventListener("input", function(){
+            //     const text = inputELement.value;
+
+            //     //KANA WAA OUTPUT-KII AMA DIV-KII ITUSINAAYEY IN AY KA COLOR LEEDAHAY VOWELS-KII 
+            //     outputElement.innerHTML = highlightedText(text);
+            //     });
+
+
+                // 
+            // function highlightedText(text){
+            //     let count = 0;
+            //     let highlighted = '';
+
+            //     for(let i = 0; i < text.length; i++){
+            //         let char = text[i];
+                    
+            //         if(vowels.includes(char)){
+                        
+            //          highlighted += `<span class="vowels">${char}</span>`;
+            //          count++;
+
+            //         }else{
+            //          highlighted += char;
+            //         }
+            //     }
+
+            //     return highlighted;
+            // }
+        
+            inputELement.addEventListener("input", function(){
+                const input = inputELement.value;
+                outputElement.innerHTML = highlightedText(input);
+            })
+        
+            function highlightedText(text){
+                let highlighted = '';
+                let count = 0;
+
+
+                for(let i = 0; i < text.length; i++){
+                    const char = text[i];
+                    if(vowels.includes(char)){
+                        highlighted += `<span class="vowels">${char}</span>`
+                    }else{
+                        highlighted += char;
+                    }
+                }
+
+                return highlighted;
+            }
+        })
+    </script>
+</body>
+</html>
