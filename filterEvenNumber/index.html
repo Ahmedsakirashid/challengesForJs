@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+                
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+              
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+                
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+                
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+      
+        .filter-btn {
+            background-color: #2ecc71;
+        }
+        
+        .filter-btn:hover {
+            background-color: #27ae60;
+        }
+                
+        .results-section {
+            margin-top: 30px;
+        }
+              
+        .section-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }       
+        
+        .number-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+                
+        .number-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+                
+        .even {
+            background-color: #d5f5e3;
+            color: #27ae60;
+        }
+        
+        .odd {
+            background-color: #fadbd8;
+            color: #e74c3c;
+        }
+                
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+                
+        .stat-item {
+            text-align: center;
+        }
+               
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+                
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Even Number Filter</h1>
+        <p class="subtitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque nostrum autem veritatis.</p>
+
+    <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="numberInput" placeholder="Enter numbers (e.g., 1, 2, 3, 4, 5)">
+                <button id="useSampleBtn">Use Sample Data</button>
+            </div>
+
+            <div class="input-group">
+                <button id="filterBtn" class="filter-btn">Filter Even Numbers</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+    </div>
+
+    <div class="results-section">
+        <h2 class="section-title">All Numbers</h2>
+        <div id="allNumbers" class="number-list"></div>
+
+        <h2 class="section-title">Even Number</h2>
+        <div id="evenNumber" class="number-list"></div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">Total Numbers</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-value" id="evenCount">0</div>
+                    <div class="stat-label">Even Numbers</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-value" id="oddCount">0</div>
+                    <div class="stat-label">Odd Numbers</div>
+                </div>
+            </div>
+    </div>
+</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const numberInput = document.getElementById("numberInput");
+        const useSampleBtn = document.getElementById("useSampleBtn");
+        const filterBtn = document.getElementById("filterBtn");
+        const resetBtn = document.getElementById("resetBtn");
+        const allNumbersDiv = document.getElementById("allNumbers");
+        const evenNumbersDiv = document.getElementById("evenNumber");
+        const totalCount = document.getElementById("totalCount");
+        const evenCount = document.getElementById("evenCount");
+        const oddCount = document.getElementById("oddCount");
+
+        const sampleNumbers = [12, 7, 23, 44, 56, 89, 102, 5, 78, 91, 34, 67];
+
+        useSampleBtn.addEventListener("click", useSampleData);
+        filterBtn.addEventListener("click", filterEvenNumbers);
+        resetBtn.addEventListener("click", resetApp);
+
+        function useSampleData(){
+            numberInput.value = sampleNumbers.join(", ");
+            displayNumber(sampleNumbers);
+        }
+
+        function displayNumber(number){
+            allNumbersDiv.innerHTML = ''
+            let evenNumber = 0;
+            let oddNumber = 0;
+
+            number.forEach((num)=>{
+                const numberItem = document.createElement("div");
+                numberItem.className = `number-item ${num % 2 === 0 ? 'even' : 'odd' }`;
+                numberItem.textContent = num;
+                allNumbersDiv.appendChild(numberItem);
+
+                if(num % 2 === 0){
+                    evenNumber++;
+                }else{
+                    oddNumber++;
+                }
+            });
+            totalCount.textContent = number.length;
+            evenCount.textContent = evenNumber;
+            oddCount.textContent = oddNumber;
+        };
+
+        function resetApp(){
+            numberInput.value = '';
+            allNumbersDiv.innerHTML = '';
+            evenNumbersDiv.innerHTML = '';
+            totalCount.textContent = 0;
+            evenCount.textContent = 0;
+            oddCount.textContent = 0;
+        }
+
+        function filterEvenNumbers(){
+            const inputValue = numberInput.value;
+            if(!inputValue.trim()){
+                alert("Please enter some numbers first!");
+                return
+            }
+            const numbers = inputValue.split(',').map(item=> parseFloat(item.trim())).filter(item => !isNaN(item));
+
+            displayNumber(numbers);
+            const evenNumbers = numbers.filter((num)=> num % 2 === 0);
+            evenNumbersDiv.innerHTML = '';
+
+            evenNumbers.forEach((num)=>{
+                const numberItem = document.createElement("div");
+                numberItem.className = 'number-item even';
+                numberItem.textContent = num;
+                evenNumbersDiv.appendChild(numberItem);
+            });
+
+            evenCount.textContent = evenNumbers.length;
+            oddCount.textContent = numbers.length - evenNumbers.length;
+        }
+    })  
+  </script>
+</body>
+</html>
