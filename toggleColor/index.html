@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body{
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        align-items: center;
+        background-color: #2F5755;
+        color: black;
+    }
+
+    .container{
+        max-width: 500px;
+        width: 100%;
+        background-color: #E0D9D9;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0 4px 25px ;
+    }
+
+     h1{
+        padding: 1rem;
+        color: #2F5755;
+    }
+
+    .name-list{
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nameItem{
+        width: 100%;
+        padding: 17px;
+        list-style: none;
+        background-color: #bebebe;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: 500;
+        border-left: 5px solid #2F5755;
+        transition: all 0.3s;
+    }
+
+    .nameItem:hover{
+        transform: translateX(12px);
+    }
+
+    .nameItem.toggleColor{
+        color: #CD2C58;
+        border: 1px solid #CD2C58 ;
+        transition: all 0.2s ease-in;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h1>Click Names to Toggle Colors</h1>
+        <ul class="name-list" id="nameList">
+        </ul>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            const names = [
+                "Ahmed Saki",
+                "A/raxman Yare",
+                "Xusen mahdi",
+                "Sack James",
+                "Larry Ellson",
+                "Larry Page"
+            ];
+            const nameList = document.getElementById("nameList");
+
+
+            function displayNames(){
+                nameList.innerHTML = '';
+
+                names.forEach((name, index)=>{
+                    const nameItems = document.createElement("li");
+                    nameItems.className = 'nameItem';
+                    nameItems.dataset.index = index;
+                    nameItems.textContent = name;
+
+                    nameItems.addEventListener("click", function(){
+                        colorToggle(this);
+                    });
+
+                    nameList.appendChild(nameItems);
+                });
+            }
+
+
+            function colorToggle(element){
+                element.classList.toggle("toggleColor");
+
+            /*
+            if (element.classList.contains('active')) {
+                element.classList.remove('active');
+                element.classList.add('alternative');
+            } else if (element.classList.contains('alternative')) {
+                element.classList.remove('alternative');
+            } else {
+                element.classList.add('active');
+            }
+            */
+         }
+
+            displayNames();
+        })
+    </script>
+</body>
+</html>

@@ -216,27 +216,31 @@
         const evenCount = document.getElementById("evenCount");
         const oddCount = document.getElementById("oddCount");
 
-        const sampleNumbers = [12, 7, 23, 44, 56, 89, 102, 5, 78, 91, 34, 67];
+
+        const sampleNumbers = [12,12,3,4,4,55,6,7,89,32,1,223];
+
 
         useSampleBtn.addEventListener("click", useSampleData);
         filterBtn.addEventListener("click", filterEvenNumbers);
         resetBtn.addEventListener("click", resetApp);
 
+
         function useSampleData(){
-            numberInput.value = sampleNumbers.join(", ");
-            displayNumber(sampleNumbers);
+          numberInput.value = sampleNumbers.join(", ");
+          displayNumber(sampleNumbers);
         }
 
+
         function displayNumber(number){
-            allNumbersDiv.innerHTML = ''
+            allNumbersDiv.innerHTML = '';
             let evenNumber = 0;
             let oddNumber = 0;
 
             number.forEach((num)=>{
-                const numberItem = document.createElement("div");
-                numberItem.className = `number-item ${num % 2 === 0 ? 'even' : 'odd' }`;
-                numberItem.textContent = num;
-                allNumbersDiv.appendChild(numberItem);
+                const numberEl = document.createElement("div");
+                numberEl.className = `number-item ${num % 2 === 0 ? 'even' : 'odd'}`;
+                numberEl.textContent = num
+                allNumbersDiv.appendChild(numberEl);
 
                 if(num % 2 === 0){
                     evenNumber++;
@@ -247,7 +251,32 @@
             totalCount.textContent = number.length;
             evenCount.textContent = evenNumber;
             oddCount.textContent = oddNumber;
-        };
+        }
+
+        function filterEvenNumbers(){
+            const inputValue = numberInput.value;
+            if(!inputValue.trim()){
+                alert("write some number with comma");
+                return
+            }
+
+            const numbers = inputValue.split(",").map((item)=> parseFloat(item.trim()) ).filter((item)=> item);
+            displayNumber(numbers);
+
+            const evenNumbers = numbers.filter((num)=> num % 2 === 0);
+            evenNumbersDiv.innerHTML = '';
+
+            evenNumbers.forEach((num)=>{
+                const numberEl = document.createElement("div");
+                numberEl.className = 'number-item even';
+                numberEl.textContent = num
+                evenNumbersDiv.appendChild(numberEl);
+            });
+
+            evenCount.textContent = evenNumbers.length;
+            oddCount.textContent = numbers.length - evenNumbers.length;
+        }
+
 
         function resetApp(){
             numberInput.value = '';
@@ -256,29 +285,6 @@
             totalCount.textContent = 0;
             evenCount.textContent = 0;
             oddCount.textContent = 0;
-        }
-
-        function filterEvenNumbers(){
-            const inputValue = numberInput.value;
-            if(!inputValue.trim()){
-                alert("Please enter some numbers first!");
-                return
-            }
-            const numbers = inputValue.split(',').map(item=> parseFloat(item.trim())).filter(item => !isNaN(item));
-
-            displayNumber(numbers);
-            const evenNumbers = numbers.filter((num)=> num % 2 === 0);
-            evenNumbersDiv.innerHTML = '';
-
-            evenNumbers.forEach((num)=>{
-                const numberItem = document.createElement("div");
-                numberItem.className = 'number-item even';
-                numberItem.textContent = num;
-                evenNumbersDiv.appendChild(numberItem);
-            });
-
-            evenCount.textContent = evenNumbers.length;
-            oddCount.textContent = numbers.length - evenNumbers.length;
         }
     })  
   </script>
