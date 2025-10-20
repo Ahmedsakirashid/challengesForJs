@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        p{
+            opacity: 0.5;
+        }
+
+        .input-group{
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            margin-top: 30px;
+        }
+
+        .inputString{
+            margin-bottom: 1.3rem;
+            height: 2.4rem;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #2575fc;
+            font-size: 1rem;
+        }
+        
+        .output{
+            padding: 12px;
+            border-radius: 4px;
+            background-color: #333;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .inputEl{
+
+        }
+
+        .inputElement{
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 0;
+            justify-content: right;
+        }
+        .inputElement p{
+            align-items: end;
+            display: flex;
+            justify-content: end;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>String Reverse</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam perferendis modi voluptate.</p>
+        </header>
+
+        <div class="input-group">
+            <div class="inputElement">
+            <input type="text" id="inputString" class="inputString" placeholder="Write String">
+            <p class="charCount" id="charCount">0 characters</p>
+            </div>
+
+            <div class="output" id="output"></div>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            const inputString = document.getElementById("inputString");
+            const outputEl = document.getElementById("output");
+            const charCount = document.getElementById("charCount");
+
+
+            
+            inputString.addEventListener("input", function(){
+                const input = inputString.value;
+
+                if(input.trim() === ''){
+                    outputEl.classList.remove("output");
+                }
+                outputEl.textContent = reverseInput(input);
+                charCount.textContent = `${input.length} characters`
+            });
+
+
+
+            function reverseInput(str){
+                return str.split('').reverse().join("");
+            }
+        })
+    </script>
+</body>
+</html>

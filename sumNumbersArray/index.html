@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        p{
+            opacity: 0.5;
+        }
+                
+        .input-section {
+            margin-bottom: 25px;
+            margin-top: 50px;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+                
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+        
+        button {
+            background-color: #0fa58c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-left: 10px;
+        }
+        
+        button:hover {
+            background-color: #1a68e8;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .array-display {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            min-height: 60px;
+            border: 1px dashed #ccc;
+        }
+        
+        .array-item {
+            display: inline-block;
+            background-color: #e3f2fd;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 4px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+              
+        .array-item {
+            display: inline-block;
+            background-color: #e3f2fd;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 4px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+          
+        .result-section {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2575fc;
+        }
+        
+        .result-label {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2575fc;
+        }
+         
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .controls button {
+            flex: 1;
+        }
+        
+        .clear-btn {
+            background-color: #ff4757;
+        }
+             
+        .clear-btn:hover {
+            background-color: #ff3742;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+           <h1>Array Sum Calculator</h1>
+           <p class="description">Add numbers to the array and calculate their sum</p>
+        </header>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="number" id="numberInput" placeholder="Enter a number">
+                <button id="addBtn">Add to Array</button>
+            </div>
+        </div>
+        
+        <div class="array-display" id="arrayDisplay">
+            Array is empty
+        </div>
+        
+        <div class="result-section">
+            <div class="result-label">Total Sum:</div>
+            <div class="result-value" id="totalSum">0</div>
+        </div>
+        
+        <div class="controls">
+            <button id="calculateBtn">Calculate Sum</button>
+            <button id="clearBtn" class="clear-btn">Clear Array</button>
+        </div>
+        
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+
+            const numberInput = document.getElementById("numberInput");
+            const addBtn = document.getElementById("addBtn");
+            const arrayDisplay = document.getElementById("arrayDisplay");
+            const totalSum = document.getElementById("totalSum");
+            const calculateBtn = document.getElementById("calculateBtn");
+            const clearBtn = document.getElementById("clearBtn");
+
+            let arrayNumber = [];
+
+            function displayArray(){
+                if(arrayNumber.length === 0){
+                    arrayDisplay.innerHTML = 'Array is empty';
+                    return
+                }
+
+                arrayDisplay.innerHTML = '';
+                arrayNumber.forEach((num)=>{
+                    const numEl = document.createElement("div");
+                    numEl.className = 'array-item';
+                    numEl.textContent = num;
+                    arrayDisplay.appendChild(numEl);
+                });
+            }
+
+            function calculateSum(){
+                if(arrayNumber.length === 0){
+                    totalSum.textContent = '0';
+                    return
+                }
+                const sum = arrayNumber.reduce((acc, cur)=> acc + cur, 0);
+                totalSum.textContent = sum;
+            }
+
+
+            addBtn.addEventListener("click", function(){
+                const input = parseFloat(numberInput.value);
+
+                if(!isNaN(input)){
+                    arrayNumber.push(input);
+                    displayArray();
+                    numberInput.value = '';
+                    numberInput.focus();
+
+                    totalSum.textContent = '0';
+                }else{
+                    alert("Please enter a valid number");
+                }
+            });
+
+            calculateBtn.addEventListener("click", calculateSum);
+
+
+            clearBtn.addEventListener("click", function(){
+                arrayNumber = [];
+                displayArray();
+                totalSum.textContent = 0;
+                numberInput.focus();
+            })
+
+            displayArray();
+        })
+    </script>
+</body>
+</html>
