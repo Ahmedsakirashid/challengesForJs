@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body{
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        align-items: center;
+        background-color: #2F5755;
+        color: black;
+    }
+
+    .container{
+        max-width: 500px;
+        width: 100%;
+        background-color: #E0D9D9;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0 4px 25px ;
+        overflow-x: scroll;
+    }
+
+    header{
+        display: flex;
+        padding: 1rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+     h1{
+        padding: 1rem;
+        color: #2F5755;
+    }
+
+    p{
+        opacity: 0.7;
+    }
+
+    .container-group{
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .input-group{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    textarea{
+        height: 5.4rem;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+        font-size: 1.2rem;
+    }
+
+    .input-group p{
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .output{
+        height: 5.4rem;
+        padding: 5px;
+        border-radius: 5px;
+        border: 2px dashed #2F5755;
+        font-size: 1.2rem;
+        background-color: aliceblue; 
+    }
+
+    button{
+        padding: 0.5rem 2.5rem;
+        border: none;
+        border-radius: 5px;
+        margin: 20px;
+        background-color: #00be56;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Word Capitalizer</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem id repellat est.</p>
+        </header>
+
+        <div class="container-group">
+            <div class="input-group">
+                <p>Enter your text:</p>
+                <textarea id="inputText" class="inputText" placeholder="Type or past your text here..."></textarea>
+            </div>
+
+            <div>
+              <button id="copyBtn">Copy</button>
+            </div>
+
+
+            <div class="input-group">
+                <p>Capitalize Text:</p>
+                <div class="output" id="output"></div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            const inputText = document.getElementById("inputText");
+            const copyBtn = document.getElementById("copyBtn");
+            const output = document.getElementById("output");
+
+            inputText.addEventListener("input", function(){
+                const input = inputText.value.trim();
+
+                output.textContent = capitalizer(input);
+            });
+
+            function capitalizer(text){
+                // return text.replace(/\b\w/g, function(char) {
+                //     return char.toUpperCase();
+                // });
+
+                return text.split(/\s/g).map(txt=> txt.charAt(0).toUpperCase() + txt.slice(1)).join(' ');
+            }
+        })
+    </script>
+</body>
+</html>
