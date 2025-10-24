@@ -223,15 +223,6 @@
                 });
             }
 
-            function calculateSum(){
-                if(arrayNumber.length === 0){
-                    totalSum.textContent = '0';
-                    return
-                }
-                const sum = arrayNumber.reduce((acc, cur)=> acc + cur, 0);
-                totalSum.textContent = sum;
-            }
-
 
             addBtn.addEventListener("click", function(){
                 const input = parseFloat(numberInput.value);
@@ -247,6 +238,16 @@
                     alert("Please enter a valid number");
                 }
             });
+
+            
+            function calculateSum(){
+                if(arrayNumber.length === 0){
+                    totalSum.textContent = '0';
+                    return
+                }
+                const sum = arrayNumber.reduce((acc, cur)=> acc + cur, 0);
+                totalSum.textContent = sum;
+            }
 
             calculateBtn.addEventListener("click", calculateSum);
 
