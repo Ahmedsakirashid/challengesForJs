@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #03204b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .group-container{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        textarea{
+            padding: 1rem;
+            height: 3rem;
+            border-radius: 5px;
+            background-color: #cccaca;
+            font-size: 1rem;
+        }
+
+        .btn-group{
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn{
+            padding: 20px 40px;
+            margin-left: 1rem;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        #output{
+            display: flex;
+            gap: 6px;
+        }
+   
+        .character {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .character:hover {
+            transform: scale(1.1);
+        }
+        
+        .character-index {
+            font-size: 0.7rem;
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+                
+        .empty-message {
+            color: #7f8c8d;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unique Characters </h1>
+
+        <div class="group-container">
+            <textarea id="inputChar" placeholder="write something..."></textarea>
+
+            <div class="btn-group">
+                <button id="AddBtn" class="btn btn-primary">Add Unique Word</button>
+                <button id="clearBtn" class="btn btn-danger">Clear</button>
+            </div>
+
+            <div id="output"></div>
+            <div class="" id="emptyMessage">
+
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const inputChar = document.getElementById("inputChar");
+        const AddBtn = document.getElementById("AddBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const outputEl = document.getElementById("output");
+        const emptyMessage = document.getElementById("emptyMessage");
+
+
+
+        function addUniqueWord(){
+            const text = inputChar.value;
+            const totalChars = text.length;
+            const uniqueCharSet = new Set();
+
+            for(let char of text){
+                uniqueCharSet.add(char);
+            }
+            const uniqueCharsArray = Array.from(uniqueCharSet);
+
+            displayUniqueCharacters(uniqueCharsArray);
+            inputChar.value = '';
+        }
+
+        function displayUniqueCharacters(characters){
+            outputEl.innerHTML = '';
+            if(characters.length === 0){
+                emptyMessage.innerHTML = `<div class="empty-message">The array is empty</div>`;
+                return
+            }
+            characters.forEach((char,index)=>{
+                const characterElement = document.createElement("div");
+                characterElement.className = 'character';
+
+                let displayChar = char;
+
+                if(char === ' '){
+                    displayChar += '␣'
+                }else if(char === '\t'){
+                    displayChar += '→'
+                }else if(char === '\n'){
+                    displayChar += '↵'
+                }
+
+                characterElement.innerHTML = `
+                <div class="char-display">${displayChar}</div>
+                <div class="character-index">${index + 1}</div>
+                `;
+
+                outputEl.appendChild(characterElement);
+            })
+        }
+
+
+        function clearDisplayArray(){
+            inputChar.value = '';
+            outputEl.innerHTML = '<div class="empty-message">No characters extracted yet. Enter text and click "Extract Unique Characters".</div>';
+        }
+
+
+        AddBtn.addEventListener("click", addUniqueWord);
+        clearBtn.addEventListener("click", clearDisplayArray);
+
+    })
+</script>
+</body>
+</html>
