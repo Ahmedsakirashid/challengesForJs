@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #235e80;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .search-container{
+            display: flex;
+            position: relative;
+            align-items: center;
+            justify-self: center;
+            background-color: white;
+            width: 30rem;
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .search-container input{
+            width: 100%;
+            padding: 0.6rem;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .search-icon{
+            position: absolute;
+            right: 0;
+            padding: 6px;
+        }
+
+        .results-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #cecece;
+        }
+
+        .product-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .productElement{
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info{
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .product-info h3{
+            font-size: 1.6rem;
+        }
+
+        .product-description{
+            color: #706f6f;
+        }
+
+        .product-price{
+            display: flex;
+            justify-content: right;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: #cc0b7c;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Search live Product</h1>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search products by name, category, or description...">
+            <div class="search-icon">🔍</div>
+        </div>
+
+        <div class="result-info">
+            <span id="result-count">Showing all products</span>
+        </div>
+
+        <div class="product-grid" id="product-container">
+
+        </div>
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const products = [
+            {
+                id: 1,
+                name: "Wireless Bluetooth Headphones",
+                category: "Electronics",
+                description: "High-quality wireless headphones with noise cancellation and 30-hour battery life.",
+                price: 89.99,
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 2,
+                name: "Smart Fitness Watch",
+                category: "Electronics",
+                description: "Track your fitness, heart rate, and sleep patterns with this advanced smartwatch.",
+                price: 149.99,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 3,
+                name: "Stainless Steel Water Bottle",
+                category: "Home & Kitchen",
+                description: "Keep your drinks hot or cold for hours with this insulated stainless steel bottle.",
+                price: 24.99,
+                image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 4,
+                name: "Ergonomic Office Chair",
+                category: "Furniture",
+                description: "Comfortable and supportive chair for long hours of work with adjustable height and lumbar support.",
+                price: 199.99,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 5,
+                name: "Organic Cotton T-Shirt",
+                category: "Clothing",
+                description: "Soft and breathable t-shirt made from 100% organic cotton. Available in multiple colors.",
+                price: 19.99,
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 6,
+                name: "Professional Camera",
+                category: "Electronics",
+                description: "Capture stunning photos with this professional-grade DSLR camera.",
+                price: 899.99,
+                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 7,
+                name: "Yoga Mat",
+                category: "Fitness",
+                description: "Non-slip yoga mat perfect for all types of workouts and meditation practices.",
+                price: 29.99,
+                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 8,
+                name: "Ceramic Coffee Mug Set",
+                category: "Home & Kitchen",
+                description: "Set of 4 beautifully designed ceramic mugs perfect for your morning coffee.",
+                price: 34.99,
+                image: "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 9,
+                name: "Laptop Backpack",
+                category: "Accessories",
+                description: "Durable and water-resistant backpack with dedicated laptop compartment and multiple pockets.",
+                price: 49.99,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 10,
+                name: "Wireless Mouse",
+                category: "Electronics",
+                description: "Ergonomic wireless mouse with precision tracking and long battery life.",
+                price: 39.99,
+                image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            }
+        ];
+
+        const searchInput = document.getElementById("search-input");
+        const resultCount = document.getElementById("result-count");
+        const productContainer = document.getElementById("product-container");
+
+
+        function initApp(){
+            renderProducts(products);
+        }
+
+
+        function renderProducts(productToDisplay){
+            productContainer.innerHTML = '';
+
+            productToDisplay.forEach((product)=>{
+                const productElement = document.createElement("div");
+                productElement.className = 'productElement'
+               
+                productElement.innerHTML = `
+                <img src=${product.image} class="product-image" />
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <span class="product-price">${product.price.toFixed(2)}</span>
+                </div>
+                `;
+
+                productContainer.appendChild(productElement);
+            });
+        }
+
+        function highlightedText(text, searchTerm){
+            if(!searchTerm) return text;
+
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function filterProducts(searchTerm){
+            const filteredProducts = products.filter((product)=>{
+                const searchableText = `${product.name} ${product.category} ${product.description}`.toLowerCase();
+                return searchableText.includes(searchTerm.toLowerCase());
+            });
+
+            const highlightedProducts = filteredProducts.map(product=>{
+                return {
+                    ...product,
+                    name: highlightedText(product.name, searchTerm),
+                    category: highlightedText(product.category, searchTerm),
+                    description: highlightedText(product.description, searchTerm)
+                };
+            });
+
+            return highlightedProducts;
+        }
+
+        searchInput.addEventListener("input", function(){
+            const searchTerm = this.value.trim();
+            if(searchTerm === ''){
+                renderProducts(products);
+            }else{
+                const filteredProducts = filterProducts(searchTerm);
+                renderProducts(filteredProducts);
+            }
+        });
+
+        initApp();
+    })
+</script>
+</body>
+</html>

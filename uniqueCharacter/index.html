@@ -184,7 +184,6 @@
                 characterElement.className = 'character';
 
                 let displayChar = char;
-
                 if(char === ' '){
                     displayChar += '␣'
                 }else if(char === '\t'){
@@ -208,9 +207,9 @@
             outputEl.innerHTML = '<div class="empty-message">No characters extracted yet. Enter text and click "Extract Unique Characters".</div>';
         }
 
-
         AddBtn.addEventListener("click", addUniqueWord);
         clearBtn.addEventListener("click", clearDisplayArray);
+
 
     })
 </script>
