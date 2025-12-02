@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        background-color: #393D7E;
+    }
+
+    .container{
+        width: 100%;
+        /* max-width: 600px; */
+        background-color: #1B3C53;
+        padding: 1rem;
+        border-radius: 7px;
+    }
+
+
+    h1,p{
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+
+    .thresholdContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 20px;
+        background-color: #e7e7e7;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .control-group{
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-weight: 600;
+        align-items: center;
+    }
+
+    input{
+        width: 19rem;
+        padding: 10px;
+        border-radius: 4px;
+        border: none;
+        font-size: 1rem;
+    }
+
+    select{
+        width: 19rem;
+        padding: 10px;
+        border-radius: 4px;
+        border: none;  
+        background-color: #E6D8C3;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+
+    thead{
+        background-color: #1B3C53;
+        color: #fff;
+        padding: 1rem;
+        text-align: left;
+    }
+
+    th{
+        padding: 0.7rem;
+    }
+
+    td{
+        padding: 0.7rem;
+    }
+
+    button{
+        padding: 7px 40px;
+        border-radius: 12px;
+        border: none;
+        background-color: #1B3C53;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    .low{
+        background-color: #253900;
+        color: #fff;
+    }
+
+    .medium{
+        background-color: #C66E52;
+        color: #1B3C53;
+    }
+
+    .high{
+        background-color: #EFE9E3;
+        color: #1B3C53;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Highlight Table Rows Based on Value Thresholds</h1>
+        <p>This table highlights rows based on the values in the "Score" column. Customize the thresholds and colors using the controls below.</p>
+
+        <div class="thresholdContainer">
+            <div class="control-group">
+                <label for="lowThreshold">Low Threshold (<=)</label>
+                <input type="number" id="lowThreshold" value="50" min="0" max="100">
+            </div>
+
+            <div class="control-group">
+                <label for="meduimThreshold">Medium Threshold (<=)</label>
+                <input type="number" id="mediumThreshold" value="50" min="0" max="100">
+            </div>
+
+            <div class="control-group">
+                <label for="columnSelect">Column to Highlight</label>
+                <select id="columnSelect">
+                    <option value="score">Score</option>
+                    <option value="progress">Progress</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>&nbsp;</label>
+                <button id="applyBtn">Apply Thresholds</button>
+            </div>
+
+                <table>
+                    <thead>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Score</th>
+                        <th>Progress</th>
+                    </thead>
+
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const tableData = [
+            { id: 1, name: "John Smith", department: "Marketing", score: 45, progress: 65 },
+            { id: 2, name: "Jane Doe", department: "Sales", score: 78, progress: 42 },
+            { id: 3, name: "Robert Johnson", department: "Engineering", score: 92, progress: 88 },
+            { id: 4, name: "Emily Davis", department: "HR", score: 65, progress: 35 },
+            { id: 5, name: "Michael Wilson", department: "Finance", score: 34, progress: 72 },
+            { id: 6, name: "Sarah Brown", department: "Marketing", score: 81, progress: 55 },
+            { id: 7, name: "David Miller", department: "Engineering", score: 56, progress: 90 },
+            { id: 8, name: "Lisa Taylor", department: "Sales", score: 72, progress: 48 },
+            { id: 9, name: "James Anderson", department: "Finance", score: 89, progress: 78 },
+            { id: 10, name: "Jennifer Thomas", department: "HR", score: 41, progress: 62 }
+        ];
+
+        const tableBody = document.querySelector("tbody");
+        const lowThresholdInput = document.getElementById("lowThreshold");
+        const mediumThresholdInput = document.getElementById("mediumThreshold");
+        const columnSelect = document.getElementById("columnSelect");
+        const applyBtn = document.getElementById("applyBtn");
+
+
+        function initApp(){
+            renderTable();
+        }
+
+        function renderTable(){
+            tableBody.innerHTML = '';
+
+            tableData.forEach((data)=>{
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                <td>${data.id}</td>
+                <td>${data.name}</td>
+                <td>${data.department}</td>
+                <td>${data.score}</td>
+                <td>${data.progress}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+
+            applyHighlighting();
+        }
+
+
+        function applyHighlighting(){
+            const lowThreshold = parseInt(lowThresholdInput.value);
+            const mediumThreshold = parseInt(mediumThresholdInput.value);
+            const column = columnSelect.value;
+
+            const rows = tableBody.querySelectorAll("tr");
+
+            rows.forEach((row, index)=>{
+                row.classList.remove("row", "medium", "high");
+
+                let value;
+                if(column === 'score'){
+                    value = tableData[index].score;
+                }
+                else if(column === "progress"){
+                    value = tableData[index].progress;
+                }
+
+                if(value <= lowThreshold){
+                    row.classList.add("low");
+                }else if(value <= mediumThreshold){
+                    row.classList.remove("medium");
+                }else{
+                    row.classList.add("high");
+                }
+            })
+        }
+
+
+
+        applyBtn.addEventListener("click", applyHighlighting)
+
+        initApp();
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        background-color: #393D7E;
+    }
+
+    .container{
+        width: 100%;
+        /* max-width: 600px; */
+        background-color: #1B3C53;
+        padding: 1rem;
+        border-radius: 7px;
+    }
+
+    h1,p{
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+
+    .searchContainer{
+        display: flex;
+        justify-content: center;
+        margin: 1rem;
+    }
+
+    input{
+        width: 25rem;
+        padding: 0.3rem;
+        font-size: 1.4rem;
+        border: 1px solid #393D7E;
+        border-radius: 6px 0 0 6px;
+    }
+
+    button{
+        padding: 12px 30px;
+        border-radius: 0 6px 6px 0;
+        border: 1px solid #393D7E;
+        background-color: #540863;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .result-container{
+        display: grid;
+        grid-template-columns: auto auto auto;
+        gap: 3rem;
+        padding: 1rem;
+    }
+
+    .category-card{
+        background-color: #fff;
+        padding: 1.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        border-radius: 0.7rem;
+    }
+
+    .category-name{
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #393D7E;
+    }
+
+    .subCategoryItem{
+        border-top: 1px solid #e7e6e6;
+        margin-bottom: 1rem;
+    }
+
+
+
+</style>
+<body>
+    <div class="container">
+        <h1>Nested Object Filter</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore itaque cupiditate molestiae ipsum ullam? Ipsum!</p>
+
+        <div class="searchContainer">
+            <input type="text" id="search" class="search">
+            <button id="clearBtn">Clear</button>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+
+        </div>
+    </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const categories = [
+            {
+                id: 1,
+                name: "Electronics",
+                subcategories: [
+                    { id: 101, name: "Smartphones" },
+                    { id: 102, name: "Laptops" },
+                    { id: 103, name: "Tablets" },
+                    { id: 104, name: "Cameras" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Clothing",
+                subcategories: [
+                    { id: 201, name: "Men's Clothing" },
+                    { id: 202, name: "Women's Clothing" },
+                    { id: 203, name: "Kids' Clothing" },
+                    { id: 204, name: "Accessories" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Home & Garden",
+                subcategories: [
+                    { id: 301, name: "Furniture" },
+                    { id: 302, name: "Kitchenware" },
+                    { id: 303, name: "Decor" },
+                    { id: 304, name: "Gardening Tools" }
+                ]
+            },
+            {
+                id: 4,
+                name: "Sports & Outdoors",
+                subcategories: [
+                    { id: 401, name: "Exercise Equipment" },
+                    { id: 402, name: "Outdoor Gear" },
+                    { id: 403, name: "Team Sports" },
+                    { id: 404, name: "Water Sports" }
+                ]
+            },
+            {
+                id: 5,
+                name: "Books & Media",
+                subcategories: [
+                    { id: 501, name: "Fiction" },
+                    { id: 502, name: "Non-Fiction" },
+                    { id: 503, name: "Educational" },
+                    { id: 504, name: "Magazines" }
+                ]
+            },
+            {
+                id: 6,
+                name: "Health & Beauty",
+                subcategories: [
+                    { id: 601, name: "Skincare" },
+                    { id: 602, name: "Haircare" },
+                    { id: 603, name: "Vitamins" },
+                    { id: 604, name: "Fitness" }
+                ]
+            }
+        ];
+
+
+        const searchInput = document.getElementById("search");
+        // const clearBtn = document.getElementById("clearBtn");
+        const resultContainer = document.getElementById("resultContainer");
+
+        function initApp(){
+            displayResult(categories);
+        }
+
+
+        function displayResult(categories){
+            resultContainer.innerHTML = '';
+
+            categories.forEach((category)=>{
+                const categoryCard = document.createElement("div");
+                categoryCard.className = 'category-card';
+
+                const categoryName = document.createElement("div");
+                categoryName.textContent = category.name;
+                categoryName.className = 'category-name'
+
+                const subCategoryList = document.createElement("ul");
+
+                category.subcategories.forEach((cat)=>{
+                    const subCategoryItem = document.createElement("li");
+                    subCategoryItem.textContent = cat.name;
+                    subCategoryItem.className = 'subCategoryItem';
+
+                    subCategoryList.appendChild(subCategoryItem);
+                });
+
+
+                categoryCard.appendChild(categoryName);
+                categoryCard.appendChild(subCategoryList);
+                resultContainer.appendChild(categoryCard);
+
+            });
+        }
+
+        function filterCategories(searchTerm){
+            if(!searchTerm.trim()){
+                return categories
+            }
+
+            const lowerSearchTerm = searchTerm.toLowerCase();
+
+           return categories.filter(category =>{
+                if(category.name.toLowerCase().includes(searchTerm)){
+                    return true
+                }
+
+                const matchingSubcategories = category.subcategories.filter(
+                    subcategory => subcategory.name.toLowerCase().includes(lowerSearchTerm)
+                );
+                
+                if(matchingSubcategories.length > 0){
+                    category.subcategories = matchingSubcategories;
+                    return true
+                }
+
+                return false;
+            }).map(category => {
+                if (category.subcategories.some(sub => sub.name.toLowerCase().includes(lowerSearchTerm))) {
+                    return {
+                        ...category,
+                        subcategories: category.subcategories.filter(
+                            subcategory => subcategory.name.toLowerCase().includes(lowerSearchTerm)
+                        )
+                    };
+                }
+                return category;
+            });
+        }
+
+
+        function highlightText(element, searchTerm){
+            if(!searchTerm) return
+
+            const text = element.textContent;
+            const regex = new RegExp(`${searchTerm}`, 'gi');
+            const newText = text.replace(regex, '<span class="highlight">$1</span>');
+
+            element.innerHTML = newText
+        }
+
+
+        searchInput.addEventListener("input", function(){
+            const searchTerm = this.value;
+            const filteredProducts = filterCategories(searchTerm);
+            displayResult(filteredProducts);
+        })
+
+        initApp();
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #13161a 0%, #021e4d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+            user-select: none;
+        }
+
+        th:hover {
+            background-color: #2980b9;
+        }
+
+        th.sort-asc::after {
+            content: " ▲";
+            font-size: 12px;
+            position: absolute;
+            right: 10px;
+        }
+
+        th.sort-desc::after {
+            content: " ▼";
+            font-size: 12px;
+            position: absolute;
+            right: 10px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e8f4fc;
+            transition: background-color 0.2s;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Directory</h1>
+        <p class="description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae nisi doloremque beatae tempora perspiciatis voluptatibus id repellat sequi expedita suscipit!</p>
+
+        <table id="sortable-table">
+            <thead>
+                <tr>
+                    <th data-sort="name">Name</th>
+                    <th data-sort="position">Position</th>
+                    <th data-sort="department">Department</th>
+                    <th data-sort="salary">Salary</th>
+                    <th data-sort="startDate">Start Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>John Smith</td>
+                    <td>Software Engineer</td>
+                    <td>Engineering</td>
+                    <td>$85,000</td>
+                    <td>2020-03-15</td>
+                </tr>
+                <tr>
+                    <td>Sarah Johnson</td>
+                    <td>Product Manager</td>
+                    <td>Product</td>
+                    <td>$95,000</td>
+                    <td>2019-07-22</td>
+                </tr>
+                <tr>
+                    <td>Michael Brown</td>
+                    <td>UX Designer</td>
+                    <td>Design</td>
+                    <td>$75,000</td>
+                    <td>2021-01-10</td>
+                </tr>
+                <tr>
+                    <td>Emily Davis</td>
+                    <td>Data Analyst</td>
+                    <td>Analytics</td>
+                    <td>$70,000</td>
+                    <td>2020-11-05</td>
+                </tr>
+                <tr>
+                    <td>Robert Wilson</td>
+                    <td>Marketing Specialist</td>
+                    <td>Marketing</td>
+                    <td>$65,000</td>
+                    <td>2018-09-18</td>
+                </tr>
+                <tr>
+                    <td>Jennifer Lee</td>
+                    <td>Senior Developer</td>
+                    <td>Engineering</td>
+                    <td>$105,000</td>
+                    <td>2017-05-30</td>
+                </tr>
+                <tr>
+                    <td>David Miller</td>
+                    <td>HR Manager</td>
+                    <td>Human Resources</td>
+                    <td>$80,000</td>
+                    <td>2019-02-14</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const table = document.getElementById("sortable-table");
+        const headers = document.querySelectorAll("th");
+        const tableBody = document.querySelector("tbody");
+        // const sortIndicator = document.getElementById("")
+
+        let currentSort = {
+            column: null,
+            direction: 'asc'
+        };
+        const rows = Array.from(tableBody.querySelectorAll("tr"));
+
+        headers.forEach((header)=>{
+            header.addEventListener("click", function(){
+                const columnIndex = header.cellIndex;
+                const sortType = header.getAttribute("data-sort");
+
+                headers.forEach((h)=> h.classList.remove("sort-asc", 'sort-desc'));
+
+                if(currentSort.column === columnIndex){
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                }else{
+                    currentSort.column = columnIndex;
+                    currentSort.direction = 'asc';
+                }
+
+                header.classList.add(`sort-${currentSort.direction}`);
+
+                sortTable(columnIndex, sortType, currentSort.direction);
+            });
+        });
+
+
+        function sortTable(columnIndex, sortType, direction){
+            const multiplier = direction === 'asc' ? 1 : -1;
+            const sortedRows = rows.sort((a,b)=>{
+                const aCell = a.cells[columnIndex].textContent.trim();
+                const bCell = b.cells[columnIndex].textContent.trim();
+
+                let aValue, bValue;
+
+                switch(sortType){
+                    case 'salary':
+                        aValue = parseFloat(aCell.replace(/[$,]/g, ''));
+                        bValue = parseFloat(bCell.replace(/[$,]/g, ''));
+                        break;
+                    
+                    case 'startDate':
+                        aValue = new Date();
+                        bValue = new Date();
+                        break;
+                    
+                    default: 
+                        aValue = aCell.toLowerCase();
+                        bValue = bCell.toLowerCase();
+                }
+
+                if(aValue < bValue) return -1 * multiplier;
+                if(aValue > bValue) return 1 * multiplier;
+                return 0;
+            });
+
+            while(tableBody.firstChild){
+                tableBody.removeChild(tableBody.firstChild);
+            }
+
+            sortedRows.forEach((row)=>{
+                tableBody.appendChild(row);
+            })
+        }
+    })
+</script>
+</body>
+</html>
