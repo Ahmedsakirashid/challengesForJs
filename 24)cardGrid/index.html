@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 30px;
+      border: none;
+      border-radius: 6px;
+      background: #002e5e;
+      color: #56a8ff;
+      font-weight: 600;
+      border: 2px solid #56a8ff;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr  1fr;
+      gap: 20px;
+    }
+
+    .card{
+        background-color: whitesmoke;
+        border-radius: 4px;
+        color: #002e5e;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .delete{
+      padding: 8px 30px;
+      border: none;
+      border-radius: 6px;
+      background: #780034;
+      color: #ff4d8e;
+      font-weight: 600;
+      border: 2px solid #ff4d8e;
+      cursor: pointer;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Card Grid</h1>
+
+        <div class="controls">
+            <input type="text" id="titleInput" placeholder="Title...">
+            <input type="text" id="descInput" placeholder="Description...">
+            <button onclick="addCard()">Add Card</button>
+            <input type="text" id="searchInput" placeholder="Search...">
+        </div>
+
+        <div class="grid" id="cardGrid"></div>
+    </div>
+
+<script>
+    // let items = [];
+    // const grid  = document.getElementById("cardGrid");
+
+    // document.getElementById("searchInput").addEventListener("input", function(){
+    //     const input = this.value.toLowerCase();
+    //     items.filter((it)=> it.title.toLowerCase().includes(input));
+    //     renderCard();
+    // });
+
+    // async function fetchData(){
+    //     try{
+    //         const res = await fetch(`https://jsonplaceholder.typicode.com/photos?_limit=8`);
+    //         const data = await res.json();
+
+    //         items = data.map((item)=>({
+    //             id: item.id,
+    //             title: item.title,
+    //             description: item.description,
+    //             image: item.url
+    //         }));
+    //         renderCard();
+    //     }
+    //     catch(err){
+    //         console.log("Error fetching data", err);
+    //     }
+    // }
+
+    // function renderCard(){
+    //     const search = document.getElementById("searchInput").value.toLowerCase();
+    //     grid.innerHTML = "";
+
+    //     items.filter((item)=> item.title.toLowerCase().includes(search))
+    //     .forEach((item)=>{
+    //         const itemEl = document.createElement("div");
+    //         itemEl.className = "card";
+
+    //         itemEl.innerHTML = `
+    //         <img src="${item.url}" />
+    //         <h3>${item.title}</h3>
+    //         <p>${item.description}</p>
+    //         <button class="delete">Delete</button>
+    //         `;
+
+    //         grid.appendChild(itemEl);
+    //     });
+    // }
+
+    // function addCard(){
+    //     const title = document.getElementById("titleInput").value;
+    //     const desc = document.getElementById("descInput").value;
+
+    //     if(!title || !desc) return alert("Fill all fields");
+
+    //     const newCard = {
+    //         id: Date.now(),
+    //         title,
+    //         description: desc,
+    //         image: "https://picsum.photos/300/200?random=" + Math.random()
+    //     };
+
+    //     items.unshift(newCard);
+    //     document.getElementById("titleInput").value = "";
+    //     document.getElementById("descInput").value = "";
+    //     renderCard();
+    // }
+    let items = [];
+    const grid = document.getElementById("cardGrid");
+    document.getElementById("searchInput").addEventListener("input", function(){
+        const input = this.value.toLowerCase();
+
+        items.filter((it)=> it.title.toLowerCase().includes(input));
+        renderCard();
+    })
+
+    async function  fetchData() {
+        try{
+            const res = await fetch(`https://jsonplaceholder.typicode.com/photos?_limit=8%22`);
+            if(!res.ok) {
+                alert("cannot fetching data");
+            }
+
+            const data = await res.json();
+            items = data.map((item)=>({
+                id: item.id,
+                title: item.title,
+                image: item.url
+            }));
+            renderCard();
+        }
+        catch(err){
+            console.log(`Error`, err);
+        }
+    }
+
+    function renderCard(){
+        const search = document.getElementById("searchInput").value.toLowerCase();
+        grid.innerHTML = "";
+
+        items.filter(item => item.title.toLowerCase().includes(search))
+        .forEach((item)=>{
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+            <div>
+                <img src="${item.url}" />
+                <p>${item.title}</p>
+                <p>${item.desc}</p>
+                <button class="delete" onclick="deleteItem(${item.id})">Delete</button>
+                </div>
+            `;
+
+            grid.appendChild(card);
+        })
+    }
+
+
+    function addCard(){
+        const title = document.getElementById("titleInput").value;
+        const desc = document.getElementById("descInput").value;
+
+        if(!title || !desc) return;
+
+        const newCard = {
+            id: Date.now(),
+            title,
+            desc: desc,
+            image: "https://picsum.photos/300/200?random=" + Math.random()
+        }
+
+        items.unshift(newCard);
+        alert("Successfully Added");
+        document.getElementById("titleInput").value = "";
+        document.getElementById("descInput").value = "";
+
+        renderCard();
+    }
+
+
+    function deleteItem(id){
+        items = items.filter((it)=> it.id !== id);
+        renderCard();
+    }
+
+    fetchData();
+</script>
+</body>
+</html>

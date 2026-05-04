@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #fff;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #d7d5d5;
+    }
+
+    .container {
+      width: 500px;
+      margin: auto;
+    } 
+
+    input{
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 3px;
+        border: none;
+        font-size: 0.9rem;
+    }
+
+    .cont{
+        display: flex;
+        gap: 12px;
+    }
+
+    .cont button{
+        padding: 2px 40px;
+        background-color: #00ffd5;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .filter-box {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+        background: #ddd;
+        padding: 7px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+
+    .filter-btn.active {
+      background: #333;
+      color: white;
+    }
+
+    .todoList{
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 3rem;
+    }
+
+    .tasks{
+        background-color: #f4f4f4;
+        color: #0f172a;
+        padding: 12px;
+        border-radius: 7px;
+        display: flex;
+        justify-content: space-between;
+        border-left: 2px solid red;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .tasks:hover{
+        transform: translateX(12px);
+        transition: all 0.2s;
+    }
+
+    .tasks button{
+        padding: 7px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .delete{
+        background-color: #ff007b;
+        color: #f4f4f4;
+    }
+
+    .up{
+        background-color: #00ff40;
+        color: #0f172a;
+    }
+
+    .down{
+        background-color: #0066ff;
+        color: #f4f4f4;
+    }
+
+    .completed{
+        text-decoration: line-through;
+        font-style: italic;
+        color: gray;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <div class="cont">
+            <input type="text" id="inputEl" placeholder="Write your task...">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+    <div class="filter-box">
+      <button class="filter-btn active" onclick="setFilter('all')">All</button>
+      <button class="filter-btn" onclick="setFilter('completed')">Completed</button>
+      <button class="filter-btn" onclick="setFilter('pending')">Pending</button>
+    </div>
+
+    <div class="">
+        <input type="text" id="searchEl" placeholder="Search task...">
+    </div>
+
+        <div class="todoList" id="todoList"></div>
+    </div>
+
+<script>
+    let items = [
+        {id: 1, text: "Learning React", completed: false},
+        {id: 2, text: "Learning HTML and CSS", completed: true},
+        {id: 3, text: "Building Project", completed: false}
+    ];
+
+    let currentFilter = "all";
+
+    document.getElementById("searchEl").addEventListener("input", function(){
+        const search = this.value.toLowerCase();
+
+        items.filter(item=>
+            item.text.toLowerCase().includes(search)
+        );
+        renderTask();
+    })
+
+    function renderTask(){
+        const search = document.getElementById("searchEl").value.toLowerCase();
+        let todoList = document.getElementById("todoList");
+        todoList.innerHTML = "";
+
+        let filterTask = items.filter(task=>{
+            if(currentFilter === "completed") return task.completed; 
+            if(currentFilter === 'pending') return !task.completed;
+
+            return true;
+        }
+        )
+
+        filterTask
+        .filter(item=> item.text.toLowerCase().includes(search))
+        .forEach((item)=>{
+            const itemEl = document.createElement("div");
+            itemEl.className = "tasks";
+
+            itemEl.innerHTML = `
+            <span class=" ${item.completed ? "completed" : ''}" onclick="toggleTask(${item.id})">${item.text}</span>
+            <div>
+                <button class="delete" onclick="deleteTask(${item.id})">Delete</button>
+                <button class="up" onclick="moveUp(${item.id})">Up</button>
+                <button class="down" onclick="moveDown(${item.id})">Down</button>
+            </div>
+            `;
+
+            todoList.appendChild(itemEl);
+        });
+    }
+
+    function addTask(){
+
+        const input = document.getElementById("inputEl").value.trim();
+        if(!input) return;
+
+        const newTask = {
+            id: items.length + 1,
+            text: input,
+            completed: false
+        }
+
+        items.unshift(newTask);
+        renderTask();
+        document.getElementById("inputEl").value = "";
+    }
+
+    function deleteTask(id){
+        items = items.filter(item=> item.id !== id);
+        renderTask();
+    }
+
+    function toggleTask(id){
+        items = items.map(task=>
+            task.id === id 
+            ? {...task, completed: !task.completed}
+            : task
+        )
+        renderTask();
+    }
+
+    function setFilter(filter){
+        currentFilter = filter;
+
+        document.querySelectorAll(".filter-btn").forEach((btn)=>{
+            btn.classList.remove("active");
+        })
+
+        event.target.classList.add("active");
+        renderTask();
+    }
+
+
+    function moveUp(index){
+        
+        if(index === 0) return
+
+        [items[index - 1], items[index]] = [items[index], items[index - 1]];
+        renderTask();
+    }
+
+
+    function moveDown(index){
+        if(index === items.length - 1) return;
+
+        [items[index], [items[index + 1]]] = [items[index + 1], [items[index]]];
+        renderTask();
+    }
+    
+    renderTask();
+</script>
+</body>
+</html>

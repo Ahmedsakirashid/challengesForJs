@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #e9f0f5 0%, #d9e2ec 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      padding: 1.5rem;
+    }
+
+    /* simple card container */
+    .card {
+      max-width: 780px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    /* header area */
+    .header {
+      background: #1f2b38;
+      padding: 1.5rem 2rem;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .header h1::before {
+      content: "✨";
+      font-size: 1.6rem;
+      font-weight: normal;
+    }
+
+    .sub {
+      font-size: 0.9rem;
+      color: #cbdbe6;
+      margin-top: 0.5rem;
+      font-weight: 400;
+    }
+
+    /* main content */
+    .content {
+      padding: 2rem 2rem 1.8rem;
+    }
+
+    /* source array section */
+    .source-section {
+      background: #f8fafc;
+      border-radius: 1.25rem;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.8rem;
+      border: 1px solid #e2edf2;
+    }
+
+    .label-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: #3a6b8c;
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .array-bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .number-chip {
+      background: white;
+      border-radius: 2rem;
+      padding: 0.4rem 1rem;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #1e2a36;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #dce5ec;
+      font-family: monospace;
+      transition: 0.1s ease;
+    }
+
+    /* even result panel */
+    .result-panel {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      border: 1px solid #e0edf2;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .panel-title {
+      background: #eef3fa;
+      padding: 0.85rem 1.5rem;
+      font-weight: 600;
+      color: #1f4e6e;
+      border-bottom: 1px solid #dde6ef;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .even-list-area {
+      padding: 1.25rem 1.5rem;
+      min-height: 110px;
+    }
+
+    .even-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .even-chip {
+      background: #eef2f9;
+      border-radius: 2rem;
+      padding: 0.4rem 1rem;
+      font-weight: 500;
+      font-family: monospace;
+      font-size: 1rem;
+      color: #0c4e6e;
+      border-left: 3px solid #2c9b77;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .empty-message {
+      color: #7e95ab;
+      font-style: italic;
+      font-size: 0.9rem;
+      padding: 0.6rem 0;
+    }
+
+    /* sum card */
+    .sum-card {
+      background: linear-gradient(115deg, #f0f6fa 0%, #eef3f8 100%);
+      border-radius: 1.25rem;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid #cde3ed;
+    }
+
+    .sum-label {
+      font-weight: 600;
+      color: #1f4e6e;
+      font-size: 1rem;
+      letter-spacing: -0.2px;
+    }
+
+    .sum-value {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #1a5d7a;
+      font-family: 'JetBrains Mono', monospace;
+      background: white;
+      padding: 0.2rem 1rem;
+      border-radius: 3rem;
+      box-shadow: inset 0 1px 2px #00000008, 0 1px 2px white;
+      line-height: 1.2;
+    }
+
+    /* simple button + reset */
+    .action-bar {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .refresh-btn {
+      background: #2c5f8a;
+      border: none;
+      color: white;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.6rem;
+      border-radius: 2.5rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.05s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .refresh-btn:hover {
+      background: #1f4564;
+      transform: scale(0.97);
+    }
+
+    .refresh-btn:active {
+      background: #143a54;
+    }
+
+    footer {
+      background: #f1f6fa;
+      padding: 0.9rem 2rem;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #6a8baa;
+      border-top: 1px solid #e2edf2;
+    }
+
+    @media (max-width: 520px) {
+      .content {
+        padding: 1.5rem;
+      }
+      .sum-value {
+        font-size: 1.7rem;
+        padding: 0.1rem 0.8rem;
+      }
+      .number-chip, .even-chip {
+        font-size: 0.85rem;
+        padding: 0.3rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>Array Filter + Compute</h1>
+        <div class="sub">even numbers only · dynamic sum total</div>
+    </div>
+
+    <div class="content">
+
+        <div class="source-section">
+            <div class="label-badge">
+                <span>📋 ORIGINAL ARRAY</span>
+            </div>
+            <div class="array-bubbles" id="originalArrayContainer">
+                <!-- filled dynamically with js -->
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <div class="panel-title">
+                <span>✅ FILTERED RESULT</span>
+                <span style="font-size:0.75rem;">(even numbers only)</span>
+            </div>
+            <div class="even-list-area">
+                <div id="evenListContainer" class="even-items">
+                <!-- even chips will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- sum total section -->
+        <div class="sum-card">
+        <span class="sum-label">🧮 SUM TOTAL (evens)</span>
+        <span class="sum-value" id="totalSumDisplay">0</span>
+        </div>
+
+        <!-- optional refresh / regenerate -->
+        <div class="action-bar">
+        <button class="refresh-btn" id="refreshDataBtn">
+            🔄 Randomize array
+        </button>
+        </div>
+
+    </div>
+
+<script>
+    (function(){
+        let currentNumbers = [12, 7, 9, 24, 31, 18, 42, 5, 60, 13, 28, 99, 2, 44, 37];
+
+        const originalContainer = document.getElementById("originalArrayContainer");
+        const evenListContainer = document.getElementById("evenListContainer");
+        const totalSumSpan = document.getElementById("totalSumDisplay");
+
+        function filterEvenNumbers(arr){
+            return arr.filter((num)=> num % 2 === 0);
+        }
+
+        function computeSum(arr){
+            return arr.reduce((acc, val)=> acc + val, 0);
+        }
+
+        function renderUI(){
+            renderOriginalArray(currentNumbers);
+            const evenNumbers = filterEvenNumbers(currentNumbers);
+
+            const sumEven = computeSum(evenNumbers);
+
+            renderEvenList(evenNumbers);
+            totalSumSpan.innerText = sumEven;
+        }
+
+
+        function renderOriginalArray(arr){
+            originalContainer.innerHTML = '';
+            if (!arr.length) {
+                const emptyHint = document.createElement('span');
+                emptyHint.className = 'number-chip';
+                emptyHint.textContent = '∅ empty array';
+                originalContainer.appendChild(emptyHint);
+                return;
+            }
+            arr.forEach((num)=>{
+                const chip = document.createElement("span");
+                chip.className = 'number-chip';
+                chip.textContent = num;
+                originalContainer.appendChild(chip);
+            })
+        }
+
+        function renderEvenList(evens){
+            evenListContainer.innerHTML = '';
+            if (!evens.length) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.className = 'empty-message';
+                emptyMsg.textContent = '✨ no even numbers in current array — try randomize';
+                evenListContainer.appendChild(emptyMsg);
+                return;
+            }
+
+            evens.forEach((evenVal)=>{
+                const evenChip = document.createElement("span");
+                evenChip.className = 'even-chip';
+                evenChip.textContent = evenVal;
+                evenListContainer.appendChild(evenChip);
+                
+            });
+        }
+
+        function generateRandomArray(){
+            const length = Math.floor(Math.random() * 8) + 6;
+
+            const Arr = [];
+            for(let i = 0; i < length; i++){
+                const randomValue = Math.floor(Math.random() * 99) + 1;
+                Arr.push(randomValue);
+            }
+
+            return Arr;
+        }
+
+        function randomizeArray(){
+            currentNumbers = generateRandomArray();
+            renderUI();
+        }
+
+        renderUI();
+
+        const refreshBtn = document.getElementById('refreshDataBtn');
+        if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            randomizeArray();
+        });
+        }
+
+
+
+    })();
+</script>
+</body>
+</html>

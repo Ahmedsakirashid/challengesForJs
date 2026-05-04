@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        width: 500px;
+        padding: 20px;
+        background: #1e293b;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    } 
+
+
+    .chart{
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    .bar{
+        background-color: #38bdf8;
+        width: 40px;
+        border-radius: 6px 6px 0 0;
+        transition: height 1s ease;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 5px;
+        font-size: 12px;
+    }
+
+    .label {
+        text-align: center;
+        margin-top: 8px;
+        font-size: 14px;
+    }
+
+    button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background: #22c55e;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #16a34a;
+    }
+</style>
+<body>
+    
+    <div class="container">
+        <h2>Animated Sales Chart</h2>
+
+        <div class="chart" id="chart"></div>
+        <button onclick="updateData()">Update Data</button>
+    </div>
+
+
+<script>
+    const data = [
+        {label: "Jan", value: 30},
+        {label: "Feb", value: 80},
+        {label: "Mar", value: 45},
+        {label: "Apr", value: 60},
+        {label: "May", value: 20}
+    ];
+
+    const chart = document.getElementById("chart");
+
+    function renderChart(data){
+        chart.innerHTML = "";
+
+        const maxValue = Math.max(...data.map(d=> d.value));
+
+        data.forEach((item)=>{
+            const barWrapper = document.createElement("div");
+            barWrapper.classList.add("bar-wrapper");
+
+            const bar = document.createElement("div");
+            bar.classList.add("bar");
+            bar.style.height = "0px";
+            bar.textContent = item.value;
+
+            const label = document.createElement("div");
+            label.classList.add("label");
+            label.textContent = item.label;
+
+            barWrapper.appendChild(bar);
+            barWrapper.appendChild(label);
+            chart.appendChild(barWrapper);
+
+            setTimeout(() => {
+                const height = (item.value / maxValue) * 100;
+                bar.style.height = `${height}px`;
+            }, 100);
+        });
+    }
+
+
+    function updateData(){
+        const newData = data.map((item)=>({
+            ...item,
+            value: Math.floor(Math.random() * 100) + 10
+        }));
+
+        renderChart(newData);
+    }
+
+
+
+    renderChart(data);
+</script>
+</body>
+</html>

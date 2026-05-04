@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #fff;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #d7d5d5;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }   
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      color: #0f172a;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      cursor: grab;
+      transition: 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    .card p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+    
+    .card.dragging {
+      opacity: 0.5;
+      border: 2px dashed #007bff;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Drag & Drop Reorder Cards</h1>
+
+        <div class="card-list" id="cardList"></div>
+    </div>
+
+<script>
+    let cards = [
+      {
+        id: 1,
+        title: "Learn HTML",
+        description: "Understand the structure of web pages."
+      },
+      {
+        id: 2,
+        title: "Learn CSS",
+        description: "Style and design your website beautifully."
+      },
+      {
+        id: 3,
+        title: "Learn JavaScript",
+        description: "Add interactivity and dynamic behavior."
+      },
+      {
+        id: 4,
+        title: "Learn React",
+        description: "Build modern frontend applications."
+      }
+    ];
+
+    const cardList = document.getElementById("cardList");
+
+    function renderCard(){
+        cardList.innerHTML = "";
+
+        cards.forEach((card, index)=>{
+            const cardEl = document.createElement("div");
+            cardEl.className = "card";
+            cardEl.draggable = true;
+            cardEl.dataset.index = index;
+
+            cardEl.innerHTML = `
+            <h3>${card.title}</h3>
+            <p>${card.description}</p>
+            `;
+
+            cardEl.addEventListener("dragstart", ()=>{
+                cardEl.classList.add("dragging");
+            });
+
+            cardEl.addEventListener("dragend", ()=>{
+                cardEl.classList.add("dragging");
+            });
+
+            cardList.appendChild(cardEl);
+        })
+    }
+
+    cardList.addEventListener("dragover", (e)=>{
+        e.preventDefault();
+        
+        const draggingCard = document.querySelector(".dragging");
+        const afterElement = getDragAfterElement(cardList, e.clientY);
+
+        if(afterElement === null){
+            cardList.appendChild(draggingCard);
+        }
+        else{
+            cardList.insertBefore(draggingCard, afterElement);
+        }
+        
+    });
+
+    cardList.addEventListener("drop", ()=>{
+        const updateCards = [];
+        const allCards = document.querySelectorAll(".card");
+
+        allCards.forEach((cardEl)=>{
+            const title = cardEl.querySelector("h3").innerText;
+            const found = cards.find(card=> card.title === title);
+            if(found) updateCards.push(found);
+        })
+    })
+
+    function getDragAfterElement(container, y){
+        const draggableElements = [
+            ...container.querySelectorAll(".card:not(.dragging)")
+        ];
+
+        return draggableElements.reduce((closest, child)=>{
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+
+            if(offset < 0 && offset > closest.offset){
+                return {
+                    offset: offset,
+                    element: child
+                };
+            }
+            else{
+                return closest;
+            }
+        }, {
+            offset: Number.NEGATIVE_INFINITY
+        }).element;
+    }
+
+
+
+    renderCard();
+</script>
+</body>
+</html>

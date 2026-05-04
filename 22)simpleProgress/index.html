@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    body{
+        background-color: #0f172a;
+        color: white;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .container{
+        background-color:  #1e293b;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 400px;
+    }
+
+    p{
+        font-size: 2rem;
+        font-weight: 500;
+    }
+
+    .buttons{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    button{
+        padding: 7px 20px;
+        border-radius: 3px;
+        border: none;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .add{
+        background-color: #0ffc5e;
+    }
+
+    .subs{
+        background-color: #fc0f56;
+        color: white;
+    }
+
+    .reset{
+        background-color: #ffffff;
+    }
+
+
+    .progress-fill{
+        width: 100%;
+        margin-top: 12px;
+        background-color: #0f172a;
+        height: 15px;
+        border-radius: 2px;
+    }
+
+    .progress-bar{
+        width: 0%;
+        height: 100%;
+        background: #22c55e;
+        border-radius: 100px;
+        transition: all 0.2s linear;
+    }
+
+</style>
+
+<body>
+    
+    <div class="container">
+        <h1>Progress Tracker</h1>
+
+        <div class="">
+            <p id="count">0</p>
+
+            <div class="buttons">
+                <button class="add" onclick="update(1)">Add</button>
+                <button class="subs" onclick="update(-1)">Subtract</button>
+                <button class="reset" onclick="reset()">Reset</button>
+            </div>
+
+            <div class="progress-fill">
+                <div class="progress-bar" id="bar">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+    let count = 0;
+    let max = 10;
+
+    function update(value){
+        count += value;
+
+        if(count < 0) count = 0;
+        if(count > max) count = max;
+        render();
+    }
+
+    function render(){
+        document.getElementById("count").textContent = count;
+
+        let percentage = (count / max) * 100;
+        document.getElementById("bar").style.width = `${percentage}%`;
+    }
+
+    function reset(){
+        count = 0;
+        render();
+    }
+</script>
+</body>
+</html>

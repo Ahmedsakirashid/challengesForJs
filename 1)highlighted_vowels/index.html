@@ -135,17 +135,19 @@
                 const input = inputELement.value;
                 outputElement.innerHTML = highlightedText(input);
             })
-        
-            function highlightedText(text){
-                let highlighted = '';
-                let count = 0;
 
+            function highlightedText(text){
+                let count = 0;
+                let highlighted = '';
 
                 for(let i = 0; i < text.length; i++){
-                    const char = text[i];
+                    let char = text[i];
+
                     if(vowels.includes(char)){
                         highlighted += `<span class="vowels">${char}</span>`
-                    }else{
+                        count++;
+                    }
+                    else{
                         highlighted += char;
                     }
                 }

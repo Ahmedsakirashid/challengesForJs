@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 15px;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 8px;
+      width: 200px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    select, button {
+      padding: 8px 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .loading {
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+<body>
+  <h1>Sort Users</h1>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search user..." />
+
+    <select id="sortField">
+      <option value="name">Name</option>
+      <option value="email">Email</option>
+      <option value="id">ID</option>
+    </select>
+
+    <button onclick="toggleOrder()">Asc</button>
+    <div class="totaluser" id="totalUser" style="margin-top: 12px; font-weight: 600;"></div>
+  </div>
+
+  <div id="status" class="loading">Loading...</div>
+  <div class="container" id="dataContainer"></div>
+
+
+
+<script>
+    let users = [];
+    let filtered = [];
+    let sortField = 'name';
+    let asc = true;
+
+    const totalUser = document.getElementById("totalUser")
+
+    async function fetchData() {
+        try{
+            const res = await fetch('https://jsonplaceholder.typicode.com/users');
+            users = await res.json();
+            filtered = [...users];
+
+            totalUser.textContent = `total User: ${filtered.length}`;
+
+            document.getElementById("status").innerText = '';
+            renderUI();
+        }
+        catch(err){
+            document.getElementById("status").innerText = `Error loading data`;
+        }
+    }
+
+
+    function renderUI(){
+        let data = [...filtered];
+
+        data.sort((a, b)=>{
+            let valA = a[sortField];
+            let valB = b[sortField];
+
+            if(typeof valA === 'string'){
+                return asc 
+                ? valA.localeCompare(valB)
+                : valB.localeCompare(valA)
+            }
+            else{
+                return asc 
+                ? valA - valB
+                : valB = valA;
+            }
+        });
+
+        displayData(data);
+    }
+
+
+    function displayData(data){
+        const dataContainer = document.getElementById("dataContainer");
+        dataContainer.innerHTML = '';
+
+        data.forEach((user)=>{
+            const userEl = document.createElement("div");
+            userEl.className = 'card';
+
+            userEl.innerHTML = `
+            ID: ${user.id}  <br>
+            <strong>${user.name}</strong> <br>
+            ${user.email}
+            `
+
+            dataContainer.appendChild(userEl);
+        })
+    }
+
+
+    document.getElementById("sortField").addEventListener("change", (e)=>{
+        sortField = e.target.value;
+        renderUI();
+    })
+
+
+    document.getElementById("search").addEventListener("input", (e)=>{
+        const value = e.target.value.toLowerCase();
+
+        filtered = users.filter(user =>
+            user.name.toLowerCase().includes(value) ||
+            user.email.toLowerCase().includes(value)
+        );
+
+        renderUI();
+    });
+
+
+    function toggleOrder(){
+        asc = !asc;
+        document.querySelector("button").innerHTML = asc ? 'Asc' : 'Desc';
+        renderUI();
+    }
+
+
+    fetchData();
+
+</script>
+</body>
+</html>

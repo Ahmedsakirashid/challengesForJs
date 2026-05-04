@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    body{
+        padding: 0;
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #0f172a;
+        color: white;
+        
+    }
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .footStep{
+        width: 400px;
+        background-color: #162549;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 4px;
+        gap: 4.5rem;
+    }
+
+    .footStep input{
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .footStep button{
+        padding: 4px 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        background-color: #05f225;
+        border: none;
+        margin: 2px;
+        border-radius: 4px;
+    }
+
+    .hidden{
+        display: none;
+    }
+
+
+    .dashboard{
+        display: flex;
+        flex-direction: column;
+        gap: 4.5rem;
+    }
+
+
+    .charts{
+        display: flex;
+        gap: 10px;
+        height: 100px;
+        align-items: flex-end;
+    }
+
+    .value-charts{
+        background-color: #38bdf8;
+        width: 40px;
+        border-radius: 6px 6px 0 0;
+        transition: height 1s ease;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 5px;
+        font-size: 12px;
+    }
+
+
+    .progressBar{
+        background-color: #05f225;
+        width: 400px;
+        height: 10px;
+        border-radius: 5px;
+    }
+    
+    .progressBtn{
+        padding: 5px 20px;
+        margin-top: 12px;
+        border-radius: 4px;
+        border: none;
+        background-color: #38bdf8;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .progress{
+        width: 0%;
+        background-color: #ff0a9d;
+        height: 10px;
+        border-radius: 5px;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .start{
+        padding: 4px 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        background-color: #05f225;
+        border: none;
+        margin: 2px;
+        border-radius: 4px;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="notification" id="notification"></div>
+
+        <div id="footStep" class="footStep hidden" >
+
+            <div id="step1">
+                <h1>Step 1: Email</h1>
+                <input type="text" id="email" placeholder="Enter Email">
+                <button onclick="nextStep(1)">Next</button>
+            </div>
+
+            <div id="step2" class="hidden">
+                <h1>Step 2: Password</h1>
+                <input type="password" id="password" placeholder="Enter Password">
+                <button onclick="nextStep(2)">Next</button>
+            </div>
+
+
+            <div id="step3" class="hidden">
+                <h1>Step 1: Age</h1>
+                <input type="number" id="age" min="1" placeholder="Enter Age">
+                <button onclick="submitForm()">Submit</button>
+            </div>
+
+        </div>
+
+
+        <div id="dashboard" class="dashboard">
+            <h1>Welcome to Dashboard</h1>
+
+
+            <div class="charts" id="chartsEl"></div>
+
+            <div class="">
+                <div class="progressBar" >
+                    <div class="progress" id="progress"></div>
+                </div>
+                <button class="progressBtn" onclick="progressFill()">Progress</button>
+            </div>
+
+            <div class="">
+                <h1>Countdown Timer</h1>
+                <p id="countEl">0</p>
+                <button class="start" onclick="startTimer()">Start</button>
+            </div>
+        </div>
+
+    </div>
+
+
+<script>
+    let step = 0;
+    let data = [
+        {label: "Jan", values: 20},
+        {label: "Feb", values: 50},
+        {label: "Mar", values: 10},
+        {label: "Apr", values: 100},
+    ]
+
+    function nextStep(step){
+        if(step === 1){
+            let email = document.getElementById("email").value;
+            if(!email){
+                alert("Write Something");
+                return;
+            }
+            document.getElementById("step1").classList.add("hidden");
+            document.getElementById("step2").classList.remove("hidden");
+        }
+
+        if(step === 2){
+            let pass = document.getElementById("password").value;
+            if(!pass){
+                alert("Your password is less than 5");
+                return
+            }
+
+            document.getElementById("step2").classList.add("hidden");
+            document.getElementById("step3").classList.remove("hidden");
+        }
+    }
+
+    function submitForm(){
+        let age = document.getElementById("age").value;
+
+        if(age < 1){
+            alert("Invalid Age");
+            return
+        }
+
+        document.getElementById("footStep").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+
+        loadChart(data);
+    }
+
+    function loadChart(items){
+        const charts = document.getElementById("chartsEl");
+        charts.innerHTML = "";
+
+        items.forEach((item)=>{
+            const itemEl = document.createElement("div");
+            itemEl.className = "chartStep";
+
+
+            let label = document.createElement("div");
+            label.className = "label-charts";
+            label.textContent = item.label;
+
+            let value = document.createElement("div");
+            value.className = "value-charts";
+            value.textContent = item.values;
+            value.style.height = `${item.values}px`;
+
+
+            itemEl.appendChild(value);
+            itemEl.appendChild(label);
+            charts.appendChild(itemEl);
+        })
+    }
+
+    let count = 0;
+    function progressFill(){
+        count += 10;
+        const progress = document.getElementById("progress");
+        if(count > 100) progress = 100;
+        progress.style.width = `${count}%`;
+    }
+
+
+    // let interval = null;
+    function startTimer(){
+        let time = 10;
+        let el = document.getElementById("countEl");
+
+        let interval = setInterval(() => {
+            time--;
+            el.innerText = time;
+
+            if(time <= 0){
+                clearInterval(interval);
+            }
+        }, 1000);
+    }
+    
+
+    loadChart(data);
+</script>
+</body>
+</html>

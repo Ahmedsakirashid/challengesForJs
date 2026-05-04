@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  select, input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .dropdown-list {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 5px;
+    display: none;
+    background: white;
+  }
+
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover {
+    background: #eee;
+  }
+
+  .output {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+  }
+  </style>
+
+</head>
+<body>
+    <div class="container">
+        <h2>Dynamic Dropdown</h2>
+
+        <select id="country">
+            <option value="">Select Country</option>
+            <option value="somaliland">Somaliland</option>
+            <option value="usa">USA</option>
+            <option value="spain">Spain</option>
+        </select>
+
+        <input type="text" id="search" placeholder="Search city..." disabled />
+
+        <div id="dropdown" class="dropdown-list"></div>
+
+        <div class="output" id="result"></div>
+    </div>
+
+
+<script>
+    const countrySelect = document.getElementById("country");
+    const dropdown = document.getElementById("dropdown");
+    const result = document.getElementById("result");
+    const searchInput = document.getElementById("search");
+
+    const data = {
+        somaliland: ["Hargeisa", "Berbera", "Burco"],
+        usa: ["New York", "Los Angeles", "Miami"],
+        spain: ["Barcelona", "Madrid", "Mallorca"]
+    };
+
+    let currentCities = [];
+
+    countrySelect.addEventListener("change", (e)=>{
+        const country = e.target.value;
+        searchInput.value = '';
+
+        if(country){
+            searchInput.disabled = false;
+            currentCities = data[country];
+            renderList(currentCities);
+        }
+        else{
+            searchInput.disabled = true;
+            dropdown.style.display = 'none';
+        }
+    });
+
+    function renderList(list){
+        dropdown.innerHTML = '';
+
+        list.forEach((city)=>{
+            const item = document.createElement("div");
+            item.className = 'dropdown-item';
+            item.textContent = city;
+
+            item.addEventListener("click", ()=>{
+                searchInput.value = city;
+                dropdown.style.display = 'none';
+                result.textContent = `Selected: ${city}`;
+            })
+
+            dropdown.appendChild(item);
+        });
+
+        dropdown.style.display = 'block'
+    }
+
+    searchInput.addEventListener("input", ()=>{
+        const search = searchInput.value;
+
+        const filter = currentCities.filter(city=>
+            city.toLowerCase().includes(search)
+        )
+
+        renderList(filter);
+    });
+
+    document.addEventListener("click", (e)=>{
+        if(!e.target.closest(".container")){
+            dropdown.style.display = 'none';
+        }
+    });
+
+
+</script>
+</body>
+</html>

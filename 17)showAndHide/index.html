@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        flex-direction: column;
+    }
+
+    .container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .display{
+        width: 70vw;
+        text-align: center;
+    }
+
+    .hide{
+        display: none;
+    }
+
+    p{
+        word-spacing: 12px;
+        line-height: 20px;
+    }
+
+    button{
+        padding: 7px 40px;
+        border: 3px solid rgb(37, 186, 203);
+        background-color: darkblue;
+        color: #ffff;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 7px;        
+    }
+
+    button:active{
+        background-color: rgb(40, 40, 211);
+        transform: translateY(-12px);
+        transition: all 0.4s;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>Toggle Button</h1>
+
+        <button id="toggleBtn">Show Article</button>
+
+        <div class="display " id="display">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corporis, repellendus! Perspiciatis eum modi ipsa similique totam pariatur ducimus tenetur doloremque, quisquam repellat est laborum iure ut commodi enim necessitatibus perferendis neque dolorum quo odio ea sit repellendus. Tempore, cumque tempora!</p>
+        </div>
+    </div>
+
+<script>
+    const toggleBtn = document.getElementById("toggleBtn");
+    const display = document.getElementById("display");
+
+    // you can like this (optional)
+    // ============================
+    // toggleBtn.addEventListener("click", ()=>{
+    //     display.classList.toggle("hide");
+    // });
+
+    let isVisible = true;
+
+    toggleBtn.addEventListener("click", ()=>{
+        isVisible = !isVisible;
+
+        if(isVisible){
+            display.classList.add("hide");
+        }
+        else{
+            display.classList.remove("hide");
+        }
+    })
+
+
+</script>
+</body>
+</html>

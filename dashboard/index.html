@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body{
+        display: flex;
+        background: #0f172a;
+        color: white;
+    }
+
+    .sidebar{
+        width: 220px;
+        height: 100vh;
+        background: #020617;
+        padding: 20px;
+    }
+
+    .sidebar h2{
+        margin-bottom: 20px;
+    }
+
+    .sidebar button{
+        display: block;
+        width: 100%;
+        height: 2.3rem;
+        border-radius: 5px;
+        margin-bottom: 0.6rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: whitesmoke;
+        background: #1e293b;
+        cursor: pointer;
+        border: none;
+    }
+
+    .sidebar button:hover{
+        transform: translateX(10px);
+        transition: all 0.3s;
+    }
+
+    .main{
+        flex: 1;
+        padding: 20px;
+    }
+
+    .card{
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .card.active{
+        display: block;
+    }
+
+    input, select{
+        padding: 10px;
+        margin-top: 10px;
+        width: 100%;
+        border-radius: 8px;
+        border: none;
+    }
+
+    button.action {
+        margin-top: 10px;
+        background: #3b82f6;
+        border: none;
+        padding: 10px;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+
+</style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <button onclick="show('string')">String</button>
+        <button onclick="show('numbers')">Numbers</button>
+        <button onclick="show('array')">Array</button>
+        <button onclick="show('sort')">Sort</button>
+        <button onclick="show('dropdown')">Dropdown</button>
+        <button onclick="show('toggle')">Toggle</button>
+        <button onclick="show('form')">Form</button>
+    </div>
+
+    <div class="main">
+
+        <div class="card " id="string">
+            <h2>String Transform</h2>
+            <input type="text" id="textInput" placeholder="Enter text">
+            <button class="action" onclick="processText()">Process</button>
+            <div class="result" id="textResult"></div>
+        </div>
+
+        <div class="card" id="numbers">
+            <h2>Sum Until Negative</h2>
+            <input id="numbersInput" placeholder="5,6,7,-1,10">
+            <button class="action" onclick="sumUntilNegative()">Calculate</button>
+            <div class="result" id="sumResult"></div>
+        </div>
+
+        <div class="card " id="array">
+            <h2>Even & Odd</h2>
+            <input id="arrayInput" placeholder="1,2,3,4,5">
+            <button class="action" onclick="processArray()">Process</button>
+            <div class="result" id="arrayResult"></div>
+        </div>
+
+        <div class="card" id="sort">
+            <h2>Sort Data</h2>
+            <button class="action " onclick="sortData()">Sort by Age</button>
+            <div class="result" id="sortResult"></div>
+        </div>
+
+        <div class="card active" id="dropdown">
+            <h2>Dropdown</h2>
+            <select onchange="showSelection()" id="dropdownSelect">
+            <option value="">Select</option>
+            <option value="React">React</option>
+            <option value="Node">Node</option>
+            <option value="JS">JavaScript</option>
+            </select>
+            <div class="result" id="dropdownResult"></div>
+        </div>
+
+        <div class="card" id="toggle">
+            <h2>Toggle</h2>
+            <button class="action" onclick="toggleBox()">Toggle Box</button>
+            <div id="toggleBox" class="result">👋 Hello, I am visible</div>
+        </div>
+
+        <div class="card" id="form">
+            <h2>Form Validation</h2>
+            <input id="email" placeholder="Email">
+            <input id="password" placeholder="Password">
+            <input id="age" placeholder="Age">
+            <button class="action" onclick="submitForm()">Submit</button>
+            <div class="result" id="formResult"></div>
+        </div>
+
+    </div>
+
+
+<script>
+    function show(id){
+        document.querySelectorAll(".card").forEach(e=> e.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+    }
+
+    function processText(){
+        let textInput = document.getElementById("textInput").value;
+        
+        let vowels = textInput.replace(/[aeiou]/gi, v => `[${v}]`);
+        let capitalize = textInput.split(" ").map(t=> t[0]?.toUpperCase() + t.slice(1)).join(" ");
+        let reverse = textInput.split("").reverse().join("");
+        let noDup = [...new Set(textInput)].join("");
+
+        document.getElementById("textResult").innerHTML =
+            `Vowels: ${vowels}<br>Cap: ${capitalize}<br>Rev: ${reverse}<br>NoDup: ${noDup}`;
+            `Vowels: ${capitalize}`
+
+    }
+
+    function sumUntilNegative(){
+        let num = document.getElementById("numbersInput").value.split(",").map(Number);
+        let sum = 0;
+        for(let n of num){
+            if(n < 0) break;
+            sum += n;
+        }
+
+        document.getElementById("sumResult").innerText = sum;
+    }
+
+    function processArray(){
+        let input = document.getElementById("arrayInput").value;
+        let numbers = input.split(",").map(Number);
+
+        let even = numbers.filter(num => num % 2 === 0);
+        let odd = numbers.filter(num => num % 2 !== 0);
+
+        document.getElementById("arrayResult").innerHTML = `
+        Even: ${even.join(", ")} <br>
+        Odd: ${odd.join(", ")}
+        `;
+    }
+
+    function sortData(){
+        let people = [
+            {name: "John", age: 40},
+            {name: "Lisa", age: 60},
+            {name: "Ahmed", age: 20}
+        ];
+
+        people.sort((a, b)=> a.age - b.age);
+
+        let result = people.map((p)=> `${p.name} (${p.age})`).join("<br>");
+        document.getElementById("sortResult").innerHTML = result;
+    }
+
+    function showSelection(){
+        let input = document.getElementById("dropdownSelect").value;
+
+        document.getElementById("dropdownResult").innerText = 
+        input ? `You selected: ${input}` : '';
+    }
+
+    function toggleBox(){
+        let box = document.getElementById("toggleBox");
+
+        if(box.style.display === "none"){
+            box.style.display = "block";
+        } else {
+            box.style.display = "none";
+        }
+    }
+
+    function submitForm(){
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let age = document.getElementById("age").value;
+
+        if(!email.includes("@")){
+            return document.getElementById("formResult").innerText = "Invalid email";
+        }
+
+        if(password.length < 6){
+            return document.getElementById("formResult").innerText = "Password too short";
+        }
+
+        if(age < 18){
+            return document.getElementById("formResult").innerText = "Must be 18+";
+        }
+
+        document.getElementById("formResult").innerText = "✅ Form submitted successfully!";
+    }
+
+    
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        width: 500px;
+        padding: 20px;
+        background: #1e293b;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    h1{
+        text-align: center;
+    }
+
+    .input{
+        display: flex;
+        justify-content: center;
+    }
+
+    input{
+        padding: 5px;
+        width: 50%;
+        height: 30px;
+        font-size: 20px;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .button{
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .button button{
+        padding: 5px 40px;
+        border-radius: 5px;
+        border: none;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .timer{
+        display: flex;
+        justify-content: center;
+        font-size: 3.5rem; 
+    }
+
+    .start{
+        background-color: #00fb1d;
+    }
+
+    .pause{
+        background-color: #018dff;
+        color: white;
+    }
+
+    .reset{
+        background-color: #ff007b;
+        color: white;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown</h1>
+
+        <div class="input">
+            <input type="number" id="minutesInput" placeholder="Min" min="0">
+        </div>
+
+        <div class="timer" id="display">00:00</div>
+
+        <div class="button">
+            <button class="start" onclick="startTimer()">Start</button>
+            <button class="pause" onclick="pauseTimer()">Pause</button>
+            <button class="reset" onclick="reset()">Reset</button>
+        </div>
+    </div>
+
+<script>
+    let time = 0;
+    let interval = null;
+
+    function updateDisplay(){
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+
+        document.getElementById("display").textContent = 
+                String(minutes).padStart(2, "0") + ":" + 
+                String(seconds).padStart(2, "0");
+    }
+
+    function startTimer(){
+        if(interval) return;
+
+        if(time === 0){
+            const input = document.getElementById("minutesInput").value;
+            time = input * 60;
+        }
+
+        interval = setInterval(() => {
+            if(time > 0){
+                time--;
+                updateDisplay();
+            }
+            else{
+                clearInterval(interval);
+                interval = null;
+                alert("Times up!");
+            }
+        }, 1000);
+    }
+
+
+    function pauseTimer(){
+        clearInterval(interval);
+        updateDisplay();
+    }
+
+
+
+    function reset(){
+        clearInterval(interval);
+        interval = null;
+        time = 0;
+        updateDisplay();
+    }
+
+
+
+    updateDisplay();
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<style>
+    body{
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container{
+        background: #1e293b;
+        padding: 20px;
+        box-shadow: 0 10px 20px 0  rgba(24, 52, 91, 0.3);
+        border-radius: 12px;
+        padding: 12px;
+        width: 320px;
+        text-align: center;
+    }
+
+    .circle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 5px;
+        border-radius: 50%;
+        background: gray;
+    }
+
+    .circle.active {
+        background: #22c55e;
+    }
+
+    .step {
+        display: none;
+    }
+
+    .step.active {
+        display: block;
+    }
+
+    .container input{
+        width: 100%;
+        height: 1.6rem;
+        margin-top: 0.5rem;
+        border-radius: 5px;
+        border: none;
+    }
+
+    .buttons {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .next {
+        background: #22c55e;
+        color: white;
+    }
+
+    .prev {
+        background: #ef4444;
+        color: white;
+    }
+
+</style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Multi Step Form</h1>
+        <div class="">
+            <div class="circle active"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+
+        <div class="step active">
+            <h3>Step 1</h3>
+            <input type="text" placeholder="Enter your name">
+        </div>
+
+        <div class="step">
+            <h3>Step 2</h3>
+            <input type="email" placeholder="Enter your email">
+        </div>
+
+        <div class="step">
+            <h3>Step 3</h3>
+            <input type="password" placeholder="Enter your password">
+        </div>
+
+        <div class="buttons">
+            <button class="prev">Prev</button>
+            <button class="next">Next</button>
+        </div>
+    </div>
+
+<script>
+    const steps = document.querySelectorAll(".step");
+    const prevBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector(".next");
+    const circle = document.querySelectorAll(".circle");
+
+    let currentStep = 0;
+
+
+    function showStep(index){
+        steps.forEach((step, i)=>{
+            step.classList.toggle("active", i === index);
+            circle[i].classList.toggle("active", i === index);
+        });
+
+        prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+        nextBtn.textContent = index === steps.length - 1 ? 'Submit' : 'Next';
+    }
+
+    function validateStep(){
+        let input = steps[currentStep].querySelector("input");
+        return input.value.trim() !== '';
+    }
+
+    nextBtn.addEventListener("click", ()=>{
+        if(!validateStep()){
+            alert("Please fill the field");
+            return;
+        }
+
+        if(currentStep < steps.length - 1){
+            currentStep++;
+            showStep(currentStep);
+        }
+        else{
+            alert("Form Submit");
+        }
+    });
+
+    prevBtn.addEventListener("click", ()=>{
+
+        if(currentStep > 0){
+            currentStep--;
+            showStep(currentStep);
+        }
+    })
+
+    showStep(currentStep);
+</script>
+</body>
+</html>
