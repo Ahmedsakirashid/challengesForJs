@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #fff;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+
+  h2 {
+    text-align: center;
+  }
+
+  select, input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .box{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .box button{
+    padding: 10px 40px;
+    background-color: #00ff4c;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+    .grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .card{
+        background-color: #022674;
+        border-radius: 4px;
+        width: 20rem;
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr ;
+        gap: 12px;
+        transition: all 0.12s;
+    }
+
+    .card:hover{
+        transform: translateY(-5px);
+        transition: all 0.12s;
+    }
+
+    .card h1{
+        font-size: 20px;
+    }
+    .card p{
+        font-size: 15px;
+        font-weight: 100;
+    }
+
+    .deleteBtn{
+        background-color: #ff005d;
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        border: none;
+        padding: 5px 20px;
+        border-radius: 5px;
+    }
+
+    .deleteBtn:hover{
+        background-color: #ff0000;
+        transition: all 0.12s;
+    }
+
+</style>
+<body>
+    <div class="container">
+        <h1>Ultimate Card Project</h1>
+
+        <div class="box">
+            <input type="text" placeholder="Search..." id="inputSearch">
+            <select id="categoryFilter">
+                <option value="all">All</option>
+                <option value="tech">Tech</option>
+                <option value="sport">Sport</option>
+            </select>
+
+            <input type="text" placeholder="Title..." id="title">
+            <input type="text" placeholder="Description..." id="desc">
+            <select id="categoryInput">
+                <option value="tech">Tech</option>
+                <option value="sport">Sport</option>
+            </select>
+
+            <button class="addBtn" onclick="addCard()">Add </button>
+            <button class="fetchBtn">Fetch API</button>
+        </div>
+
+        <div class="grid" id="grid"></div>
+        
+    </div>
+
+<script>
+    let data = [
+        { id: 1, title: "React", desc: "Frontend", category: "tech" },
+        { id: 2, title: "Football", desc: "Sport game", category: "sport" }
+    ];
+
+    let filtered = [...data];
+    let dragIndex = null;
+
+
+    function render(){
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+
+        filtered.forEach((item, index)=>{
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+             <span><strong>Title:</strong> ${item.title}</span>
+             <span><strong>Desc:</strong>  ${item.desc}</span>
+             <span> <strong>Category:</strong> ${item.category}</span>
+             <button class="deleteBtn" onclick="removeCard(${item.id})">Delete</button>
+            `;
+
+            grid.appendChild(card);
+        });
+    }
+
+    function addCard(){
+        const title = document.getElementById("title").value;
+        const desc = document.getElementById("desc").value;
+        const category = document.getElementById("categoryInput").value;
+
+        if(!title) {
+            alert("Write all title");
+            return;
+        };
+
+        if(!desc) {
+            alert("Write  description");
+            return;
+        };
+
+        if(!category) {
+            alert("Write Category");
+            return;
+        };
+
+        const newCard = {
+            id: filtered.length + 1,
+            title,
+            desc,
+            category
+        };
+
+        filtered.push(newCard);
+        render();
+        document.getElementById("title").value = "";
+        document.getElementById("desc").value = "";
+        document.getElementById("categoryInput").value = "tech";
+    }
+
+
+    function removeCard(id){
+        data = data.filter(item=> item.id !== id);
+        applyFilter();
+    }
+
+    function applyFilter(){
+        const category = document.getElementById("categoryFilter").value;
+        const search = document.getElementById("inputSearch").value.toLowerCase();
+
+        filtered = data.filter((item)=>{
+            const matchCategory = category === "all" || item.category === category;
+            const matchSearch = 
+            item.title.toLowerCase().includes(search) ||
+            item.desc.toLowerCase().includes(search)
+
+            return matchCategory && matchSearch;
+        });
+
+        render();
+    }
+
+
+    let timeout;
+    document.getElementById("inputSearch").addEventListener("input", () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        applyFilter();
+    }, 300);
+    });
+
+
+    document.getElementById("categoryFilter")
+    .addEventListener("change", applyFilter);
+
+    render();
+</script>
+</body>
+</html>
