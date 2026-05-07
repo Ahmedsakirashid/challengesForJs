@@ -118,8 +118,8 @@
             </select>
 
             <button class="addBtn" onclick="addCard()">Add </button>
-            <button class="fetchBtn">Fetch API</button>
-        </div>
+            <button class="fetchBtn" onclick="fetchData()">Fetch API</button>
+        </div> 
 
         <div class="grid" id="grid"></div>
         
@@ -142,6 +142,7 @@
         filtered.forEach((item, index)=>{
             const card = document.createElement("div");
             card.className = "card";
+            card.draggable = true;
 
             card.innerHTML = `
              <span><strong>Title:</strong> ${item.title}</span>
@@ -149,6 +150,10 @@
              <span> <strong>Category:</strong> ${item.category}</span>
              <button class="deleteBtn" onclick="removeCard(${item.id})">Delete</button>
             `;
+
+            card.addEventListener("dragstart", ()=> dragIndex = index);
+            card.addEventListener("dragover", (e)=> e.preventDefault());
+            card.addEventListener("drop", ()=> handleDrop(index));
 
             grid.appendChild(card);
         });
@@ -164,15 +169,6 @@
             return;
         };
 
-        if(!desc) {
-            alert("Write  description");
-            return;
-        };
-
-        if(!category) {
-            alert("Write Category");
-            return;
-        };
 
         const newCard = {
             id: filtered.length + 1,
@@ -222,6 +218,32 @@
 
     document.getElementById("categoryFilter")
     .addEventListener("change", applyFilter);
+
+    function handleDrop(dropIndex){
+        let item = filtered[dragIndex];
+
+        data = data.filter(d => d.id !== item.id);
+
+        data.splice(dropIndex, 0, item);
+
+        applyFilter();
+    }
+
+
+    async function fetchData() {
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=5");
+        const apiData = await res.json();
+
+        const newItems = apiData.map(item => ({
+            id: item.id + Date.now(),
+            title: item.title.slice(0,10),
+            desc: item.body.slice(0,20),
+            category: Math.random() > 0.5 ? "tech" : "sport"
+        }));
+
+        data = [...data, ...newItems];
+        applyFilter();
+    }
 
     render();
 </script>
