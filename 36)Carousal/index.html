@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #0f172a;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .carousel-container {
+      width: 900px;
+      max-width: 95%;
+      position: relative;
+    }
+
+    .carousel{
+        overflow: hidden;
+        position: relative;
+        border-radius: 20px;
+    }
+
+    .slides{
+        display: flex; 
+    }
+
+    .slide{
+        min-width: 100%;
+        height: 500px;
+        /* border-radius: 10px; */
+        position: relative;
+    }
+
+    .slide img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .overlay{
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        padding: 40px;
+        color: white;
+    }
+
+    .overlay h2{
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    .overlay p{
+        font-size: 18px;
+        max-width: 500px;
+        line-height: 1.5;
+    }
+
+    .btn{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 55px;
+        height: 55px;
+        border: none;
+        border-radius: 50%;
+        backdrop-filter: blur(8px);
+        color: white;
+        font-size: 24px;
+        background: rgba(255,255,255, 0.2);
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .prev{
+        left: 20px;
+    }
+
+    .next{
+        right: 20px;
+    }
+
+
+    .dots{
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .dot{
+        width: 20px;
+        height: 20px;
+        border: 3px solid white;
+        border-radius: 50%;
+    }
+
+    .dot.active{
+        background-color: white;
+    }
+
+    .counter{
+        position: absolute;
+        color: white;
+        z-index: 40;
+        right: 20px;
+        top: 12px;
+        padding: 10px;
+        font-size: 15px;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(8px);
+        border-radius: 50%;
+    }
+
+
+</style>
+<body>
+    <div class="carousel-container">
+
+        <div class="carousel">
+
+            <div class="counter">
+                <span id="current">1</span> / <span id="total">5</span>
+            </div>
+
+            <button class="btn prev">&#10094;</button>
+
+            <div class="slides">
+
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1015/1200/700" alt="">
+                    <div class="overlay">
+                        <h2>Mountain Adventure</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magni esse distinctio quo?</p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1016/1200/700" alt="">
+                    <div class="overlay">
+                        <h2>Ocean Breeze</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magni esse distinctio quo?</p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1025/1200/700" alt="">
+                    <div class="overlay">
+                        <h2>Wild Nature</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magni esse distinctio quo?</p>
+                    </div>
+                </div>
+
+
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1043/1200/700" alt="">
+                    <div class="overlay">
+                        <h2>Desert Journey</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magni esse distinctio quo?</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="btn next">&#10095;</button>
+        </div>
+
+        <div class="dots"></div>
+    </div>
+</body>
+
+<script>
+
+    const slide = document.querySelectorAll('.slide');
+    const slides = document.querySelector('.slides');
+    const previousBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector('.next');
+    const dotsContainer = document.querySelector(".dots");
+
+    const current = document.getElementById("current");
+    const total = document.getElementById("total");
+
+    let index = 0;
+    let autoPlay;
+
+    total.textContent = slide.length;
+
+
+    slide.forEach((_, i)=>{
+        const dots = document.createElement("div");
+        dots.classList.add("dot");
+
+        if(i === 0){
+            dots.classList.add("active");
+        }
+        dots.addEventListener("click", ()=>{
+            index = i;
+            updateCarousel();
+        });
+
+        dotsContainer.appendChild(dots);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+
+    function updateCarousel(){
+        slides.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot)=> dot.classList.remove("active"));
+        dots[index].classList.add("active");
+
+        current.textContent = index + 1;
+    }
+
+    previousBtn.addEventListener("click", prevSlide);
+
+    nextBtn.addEventListener("click", nextSlide);
+
+    function nextSlide(){
+        index++;
+        if(index >= slide.length){
+            index = 0;
+        }
+        updateCarousel();
+    }
+
+    function prevSlide(){
+        index--;
+        if (index < 0) {
+            index = slide.length - 1;
+        }
+        updateCarousel();
+    }
+
+    document.addEventListener("keydown", (e)=>{
+        if(e.key === "ArrowRight"){
+            nextSlide();
+        }
+    });
+
+    document.addEventListener("keydown", (e)=>{
+        if(e.key === "ArrowLeft"){
+            prevSlide();
+        }
+    })
+
+    function startPlay(){
+        autoPlay = setInterval(()=>{
+            nextSlide();
+        }, 4000);
+    }
+
+    startPlay();
+</script>
+</html>
