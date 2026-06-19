@@ -91,20 +91,20 @@
 
             <select id="departmentFilter">
                 <option value="">All Departments</option>
-                <option value="">Developer</option>
-                <option value="">Designer</option>
-                <option value="">Manager</option>
+                <option value="developer">Developer</option>
+                <option value="designer">Designer</option>
+                <option value="manager">Manager</option>
             </select>
 
             <select id="sortBy">
-                <option value="">Sort Name</option>
-                <option value="">Sort Age</option>
-                <option value="">Sort Salary</option>
+                <option value="name">Sort Name</option>
+                <option value="age">Sort Age</option>
+                <option value="salary">Sort Salary</option>
             </select>
 
             <select id="order">
-                <option value="">Ascending</option>
-                <option value="">Descending</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
             </select>
         </div>
 
@@ -195,6 +195,29 @@
             emp.name.toLowerCase().includes(search.value.toLowerCase())
         )
 
+        if(departmentFilter.value){
+            filtered = filtered.filter(
+                emp => emp.department.toLowerCase() === departmentFilter.value
+            );
+        }
+
+
+        filtered.sort((a,b)=>{
+            let field = sortBy.value;
+
+            if(typeof a[field] === 'string'){
+                return order.value === "asc" 
+                ? a[field].localeCompare(b[field])
+                : b[field].localeCompare(a[field]);
+            };
+
+            return order.value === "asc"
+            ? a[field] - b[field]
+            : b[field] - a[field];
+        });
+
+
+
         tableBody.innerHTML = filtered.map((emp)=>
             `
                 <tr>
@@ -209,6 +232,9 @@
 
 
     search.addEventListener("input", renderTable);
+    departmentFilter.addEventListener("change", renderTable);
+    sortBy.addEventListener("change", renderTable);
+    order.addEventListener("change", renderTable);
 
     renderTable();
 
